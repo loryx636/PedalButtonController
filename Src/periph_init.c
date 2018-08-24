@@ -184,23 +184,12 @@ uint8_t Number_DigiButtons=0;
 
 
 uint8_t USB_Product_String[31] = {
-		79, // O
-		83, // S
-		72, // H
-		32, // Space
-		80, // P
-		66, // B
-		32, // Space
-		67, // C
-		111, // o
-		110, // n
-		116, // t
-		114, // r
-		111, // o
-		108, // l
-		108, // l
-		101, // e
-		114, // r
+		76, // L
+		84, // T
+		115, // s
+		105, // i
+		109, // m
+		//32, // Space
 };
 
 
@@ -239,7 +228,9 @@ void gpio_init(void) {
 	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
 	AFIO->MAPR = AFIO_MAPR_SWJ_CFG_DISABLE;
 
-	if (*(get_lastpage_addr((uint16_t *)FLASHSIZEREG)) == 0xFFFF) {
+	uint16_t * ultimoSlotFlashMem = get_lastpage_addr((uint16_t *)FLASHSIZEREG);
+
+	if (*(ultimoSlotFlashMem) == 0xFFFF  || *(ultimoSlotFlashMem) == 0x1FFFF) { //esiste la versione a 128kb
 		write_flash();
 	} else {
 		get_config();
@@ -260,15 +251,12 @@ void custom_usb_config(void) {
 
 
 	if (USB_Product_String_Unique[0]) {
-		USB_Product_String[17] = 32; // Space
-		USB_Product_String[18] = 40; // (
+		USB_Product_String[5] = 32; // Space
 		while ((USB_Product_String_Unique[i]) && (i < 10)) {
-			USB_Product_String[19+i] = USB_Product_String_Unique[i];
+			USB_Product_String[6+i] = USB_Product_String_Unique[i];
 			i++;
 		}
-
-		USB_Product_String[19+i] = 41; // )
-		USB_Product_String[19+i+1] = 0;
+		USB_Product_String[6+i+1] = 0;
 	}
 
 	USBD_PRODUCT_STRING_FS = USB_Product_String;

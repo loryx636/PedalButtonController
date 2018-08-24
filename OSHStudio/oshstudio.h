@@ -7,7 +7,7 @@
 #include<QFileDialog>
 #include<QTextStream>
 
-#define OSHSTUDIOVERSION 14
+#define OSHSTUDIOVERSION 15
 
 //Input/output usb packet
 #define BUFFSIZE 64

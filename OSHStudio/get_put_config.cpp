@@ -31,8 +31,8 @@ extern QString pin_names[PINS];
 
 void OSHStudio::writeConfig_Slot()
 {
-    uint8_t buf[BUFFSIZE]={2,1,0};
-    uint8_t res=0;
+    uint8_t buf[BUFFSIZE]={2,1,0};//uint8_t buf[BUFFSIZE]={2,1,0};
+    int res=0;//uint8_t res=0;
 
     //gather pins config
     buf[2]=ui->widget_PB0->get_current_index();
@@ -131,7 +131,7 @@ void OSHStudio::writeConfig_Slot()
 
     QString USB_PS_Uniq =ui->lineEdit_Device_ident->text();
     for(uint8_t i=0; i <10; i++){
-        if (USB_PS_Uniq.at(i) != 0) {
+        if (USB_PS_Uniq.size() > i ) {//if (USB_PS_Uniq.at(i) != 0) {
           buf[11+i] = (uint8_t)USB_PS_Uniq.at(i).toLatin1();
         } else {
             buf[11+i] = 0;
@@ -337,14 +337,14 @@ void OSHStudio::setConfig_Slot(uint8_t buf[BUFFSIZE], uint8_t op_code){
 }
 
 void OSHStudio::resetConfig_Slot(){
-    uint8_t buf[BUFFSIZE]={0};
+    uint8_t buf[BUFFSIZE]={0}; //LT era 0
 
     setConfig_Slot(buf,1);
 //    setConfig_Slot(buf,2);
 }
 
 void OSHStudio::restoreConfig_Slot(){
-    uint8_t buf[BUFFSIZE]={0};
+    uint8_t buf[BUFFSIZE]={0}; //LT era 0
 
     for (uint8_t i=2; i<8; i++){
         buf[i]=AnalogMedSmooth;
@@ -446,16 +446,16 @@ void OSHStudio::restoreConfig_Slot(){
 
 void OSHStudio::getConfig_Slot()
 {
-    uint8_t buf[BUFFSIZE]={0};
-    uint8_t bufrep2[2]={3,1};
-    uint8_t res=0,j=0;
+    uint8_t buf[BUFFSIZE]={0}; //LT era 0
+    uint8_t bufrep2[2]={3,1};//uint8_t bufrep2[2]={3,1};
+    int res=0,j=0;//uint8_t res=0,j=0;
 
 
     do {
         res=hid_write(handle_read, bufrep2, 2);
         res=hid_read(handle_read, buf, BUFFSIZE);
         j++;
-       } while ((buf[0] != 4) || j<100 );
+       } while ((buf[0] != 4) && j<50 );
 //    if (buf[1] == 1) {
         setConfig_Slot(buf,1);
 //    }
@@ -470,29 +470,34 @@ void OSHStudio::getConfig_Slot()
         res=hid_write(handle_read, bufrep2, 2);
         res=hid_read(handle_read, buf, BUFFSIZE);
         j++;
-       } while ((buf[0] != 4) || j<100 );
+       } while ((buf[0] != 4) && j<50 );
 //    if (buf[1] == 2) {
         setConfig_Slot(buf,2);
 //    }
 
-        bufrep2[1]=3;
-        j=0;
-        do {
-            res=hid_write(handle_read, bufrep2, 2);
-            res=hid_read(handle_read, buf, BUFFSIZE);
-            j++;
-           } while ((buf[0] != 4) || j<100 );
-    //    if (buf[1] == 2) {
-            setConfig_Slot(buf,3);
-    //    }
+    //aggiunto per reset di buf
+    for (uint8_t i=1; i<BUFFSIZE; i++) {
+        buf[i]=0;
+    }
+
+    bufrep2[1]=3;
+    j=0;
+    do {
+        res=hid_write(handle_read, bufrep2, 2);
+        res=hid_read(handle_read, buf, BUFFSIZE);
+        j++;
+       } while ((buf[0] != 4) && j<50 );
+//    if (buf[1] == 2) {
+        setConfig_Slot(buf,3);
+//    }
 
 }
 
 
 void OSHStudio::send_write_packet(uint8_t buf[BUFFSIZE])
 {
-    uint8_t answer[BUFFSIZE]={0};
-    uint8_t res=0;
+    uint8_t answer[BUFFSIZE]={0}; //LT era 0
+    int res=0;//    uint8_t res=0;
     uint8_t j=0;
 
     do {
