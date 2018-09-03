@@ -86,10 +86,10 @@ volatile struct axis_conf axises[ADC_BUFF_SIZE] =
 
 
 //default parameters
-volatile uint16_t Rot_Press_Time=50;
-volatile uint16_t Rot_Debounce_Time=10;
+volatile uint16_t Rot_Press_Time=100;
+volatile uint16_t Rot_Debounce_Time=50;
 volatile uint16_t Button_Debounce_Time=50;
-volatile uint16_t Button_Press_time=500;
+volatile uint16_t Button_Press_time=100;
 volatile uint16_t RotSwitch_Press_Time=100;
 
 uint8_t * USBD_PRODUCT_STRING_FS;
@@ -185,12 +185,12 @@ void custom_usb_config(void) {
 
 
 	if (USB_Product_String_Unique[0]) {
-		USB_Product_String[5] = 32; // Space
+		USB_Product_String[5] = 32; // Space dopo "LTsim"
 		while ((USB_Product_String_Unique[i]) && (i < 10)) {
 			USB_Product_String[6+i] = USB_Product_String_Unique[i];
 			i++;
 		}
-		USB_Product_String[6+i+1] = 0;
+		USB_Product_String[6+i] = 0;
 	}
 
 	USBD_PRODUCT_STRING_FS = USB_Product_String;

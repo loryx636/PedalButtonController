@@ -39,8 +39,8 @@
 //#define ROTTIME 50
 //#define ROTDEBOUNCE 10
 
-#define DIR_CCW 0x10
-#define DIR_CW 0x20
+#define DIR_CCW 0x10 // antiorario
+#define DIR_CW 0x20  //orario
 
 unsigned char rotary_process(uint8_t _i, pintype type, uint32_t *PINA_Addr, uint32_t *PINB_Addr, uint16_t PINA, uint16_t PINB);
 void CheckRotaries(void);
