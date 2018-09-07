@@ -117,7 +117,10 @@ void CheckRotaries(void){
 		if ((pins[i].pin_type == Chain_Rotary_Enc_1) || (pins[i].pin_type == Chain_Rotary_Enc_2) || (pins[i].pin_type == Chain_Rotary_Enc_4)) {
 			*(pins[i].bsrr_reg_addr) = 0x1<<pins[i].pin_number;
 			res = rotary_process(j, pins[i].pin_type, Rot_PINA_IDR, Rot_PINB_IDR, Rot_PINA_pin, Rot_PINB_pin);
-			if ((res) && (millis-RotaryStore[j].time_pressed)>Rot_Debounce_Time) {RotaryStore[j].pressed = res; RotaryStore[j].time_pressed=millis;}
+			if ((res) && (millis-RotaryStore[j].time_pressed)>Rot_Debounce_Time) {
+				RotaryStore[j].pressed = res;
+				RotaryStore[j].time_pressed=millis;
+			}
 			*(pins[i].bsrr_reg_addr) = 0x1<<(pins[i].pin_number+16);
 			j++;
 		}
@@ -126,7 +129,10 @@ void CheckRotaries(void){
 	j=Number_Rotaries;
 	for (uint8_t i=0; i < Number_Single_Rotaries; i++){
 		res = rotary_process(j, Single_rotaries[i].PINA_Type, Single_rotaries[i].PINA_IDR, Single_rotaries[i].PINB_IDR, Single_rotaries[i].PINAmask, Single_rotaries[i].PINBmask);
-		if ((res) && (millis-RotaryStore[j].time_pressed)>Rot_Debounce_Time) {RotaryStore[j].pressed = res; RotaryStore[j].time_pressed=millis;}
+		if ((res) && (millis-RotaryStore[j].time_pressed)>Rot_Debounce_Time) {
+			RotaryStore[j].pressed = res;
+			RotaryStore[j].time_pressed=millis;
+		}
 		j++;
 	}
 }
