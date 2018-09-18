@@ -31,112 +31,46 @@
 
 // default ports configuration
 volatile struct pin_conf pins[USEDPINS] = {
-//Default config
-//		{AnalogMedSmooth, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 0},		//A0
-//		{AnalogMedSmooth, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 1},		//A1
-//		{AnalogMedSmooth, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 2}, 		//A2
-//		{AnalogMedSmooth, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 3}, 		//A3
-//		{AnalogMedSmooth, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 4}, 		//A4
-//		{AnalogMedSmooth, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 5}, 		//A5
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 6}, 		//A6
-//		{Button_COLUMN, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 7}, //A7
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 8},	//A8
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 9}, 	//A9
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 10},	//A10
-//		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 11},	//A11
-//		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 12},	//A12
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 15},	//A15
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 0},	//B0
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 1}, 	//B1
-//		{Button_COLUMN, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 3},	//B3
-//		{Button_ROW,	(uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 4}, //B4
-//		{Button_ROW,	(uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 5}, //B5
-//		{Button_ROW, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 6}, 	//B6
-//		{Button_ROW, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 7}, 	//B7
-//		{Button_ROW, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 8}, 	//B8
-//		{Button_ROW, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 9}, 	//B9
-//		{Chain_Rotary_PINA, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 10},	//B10
-//		{Chain_Rotary_PINB, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 11},	//B11
-//		{Button_COLUMN, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 12},//B12
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 13},	//B13
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 14},	//B14
-//		{Chain_Rotary_Enc_1, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 15},	//B15
-//		{Button_COLUMN, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 13},//C13
-//		{Button_COLUMN, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 14},//C14
-//		{Button_COLUMN, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 15},//C15
-//Config for DimSim
-//		{AnalogMedSmooth, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 0},		//A0
-//		{Analog2Button, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 1},		//A1
-//		{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 2}, 		//A2
-//		{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 3}, 		//A3
-//		{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 4}, 		//A4
-//		{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 5}, 		//A5
-//		{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 6}, 		//A6
-//		{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 7}, //A7
-//		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 8},	//A8
-//		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 9}, 	//A9
-//		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 10},	//A10
-//		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 11},	//A11
-//		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 12},	//A12
-//		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 15},	//A15
-//		{Not_Used, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 0},	//B0
-//		{Not_Used, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 1}, 	//B1
-//		{Not_Used, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 3},	//B3
-//		{Not_Used,	(uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 4}, //B4
-//		{Not_Used,	(uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 5}, //B5
-//		{Not_Used, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 6}, 	//B6
-//		{Not_Used, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 7}, 	//B7
-//		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 8}, 	//B8
-//		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 9}, 	//B9
-//		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 10},	//B10
-//		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 11},	//B11
-//		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 12},//B12
-//		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 13},	//B13
-//		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 14},	//B14
-//		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 15},	//B15
-//		{Not_Used, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 13},//C13
-//		{Not_Used, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 14},//C14
-//		{Not_Used, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 15},//C15
-//Config for DimSim_button
-		{Button_GND, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 0},		//A0
-		{Button_GND, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 1},		//A1
-		{Button_GND, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 2}, 		//A2
-		{Button_GND, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 3}, 		//A3
-		{Button_GND, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 4}, 		//A4
-		{Button_GND, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 5}, 		//A5
-		{Button_GND, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 6}, 		//A6
-		{Button_GND, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 7}, //A7
-		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 8},	//A8
-		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 9}, 	//A9
-		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 10},	//A10
-		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 11},	//A11
-		{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 12},	//A12
-		{Button_GND, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 15},	//A15
-		{Button_GND, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 0},	//B0
-		{Not_Used, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 1}, 	//B1
-		{Button_GND, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 3},	//B3
-		{Button_GND,	(uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 4}, //B4
-		{Button_GND,	(uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 5}, //B5
-		{Button_GND, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 6}, 	//B6
-		{Not_Used, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 7}, 	//B7
-		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 8}, 	//B8
-		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 9}, 	//B9
-		{Button_GND, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 10},	//B10
-		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 11},	//B11
-		{Button_GND, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 12},//B12
-		{Button_GND, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 13},	//B13
-		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 14},	//B14
-		{Not_Used, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 15},	//B15
-		{Not_Used, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 13},//C13
-		{Not_Used, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 14},//C14
-		{Not_Used, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 15},//C15
+		//LTsim Config
+				{AnalogNoSmooth, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 0},		//A0
+				{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 1},		//A1
+				{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 2}, 		//A2
+				{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 3}, 		//A3
+				{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 4}, 		//A4
+				{Not_Used, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 5}, 		//A5
+				{Chain_Rotary_Enc_4, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 6}, 		//A6
+				{Chain_Rotary_Enc_4, (uint32_t *)0x40010800, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 7}, //A7
+				{Button_COLUMN, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 8},	//A8
+				{Button_COLUMN, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 9}, 	//A9
+				{Chain_Rotary_Enc_1, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 10},	//A10
+				{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 11},	//A11 //non usare
+				{Not_Used, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 12},	//A12 //non usare
+				{Chain_Rotary_Enc_1, (uint32_t *)0x40010804, (uint32_t *)0x40010810, (uint32_t *)0x40010808, 15},	//A15
+				{Single_Rotary_PINA_4, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 0},	//B0
+				{Single_Rotary_PINB_4, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 1}, 	//B1
+				{Chain_Rotary_Enc_1, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 3},	//B3
+				{Chain_Rotary_Enc_1,	(uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 4}, //B4
+				{Button_ROW,	(uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 5}, //B5
+				{Button_ROW, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 6}, 	//B6
+				{Button_ROW, (uint32_t *)0x40010c00, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 7}, 	//B7
+				{Button_ROW, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 8}, 	//B8
+				{Button_ROW, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 9}, 	//B9
+				{Chain_Rotary_PINB, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 10},	//B10
+				{Chain_Rotary_PINA, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 11},	//B11
+				{Button_COLUMN, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 12},//B12
+				{Button_COLUMN, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 13},	//B13
+				{Button_COLUMN, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 14},	//B14
+				{Button_COLUMN, (uint32_t *)0x40010c04, (uint32_t *)0x40010c10, (uint32_t *)0x40010c08, 15},	//B15
+				{Chain_Rotary_Enc_1, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 13},//C13
+				{Single_Rotary_PINA_4, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 14},//C14
+				{Single_Rotary_PINB_4, (uint32_t *)0x40011004, (uint32_t *)0x40011010, (uint32_t *)0x40011008, 15},//C15
 };
 
 //default axises configuration
 volatile struct axis_conf axises[ADC_BUFF_SIZE] =
 {
-//		{0,0,0xFF,0x0F,0,0,0xFFF},
-		{0x1E,0,0xA3,0x03,0,0x1E,0x3A3},   // for DimSim min_cal_value=30, max_cal_value=1228/0.3
+		{0,0,0xFF,0x0F,0,0,0xFFF},
+//		{0x1E,0,0xA3,0x03,0,0x1E,0x3A3},   // for DimSim min_cal_value=30, max_cal_value=1228/0.3
 		{0,0,0xFF,0x0F,0,0,0xFFF},
 		{0,0,0xFF,0x0F,0,0,0xFFF},
 		{0,0,0xFF,0x0F,0,0,0xFFF},
@@ -152,15 +86,15 @@ volatile struct axis_conf axises[ADC_BUFF_SIZE] =
 
 
 //default parameters
-volatile uint16_t Rot_Press_Time=50;
-volatile uint16_t Rot_Debounce_Time=10;
+volatile uint16_t Rot_Press_Time=100;
+volatile uint16_t Rot_Debounce_Time=15;
 volatile uint16_t Button_Debounce_Time=50;
-volatile uint16_t Button_Press_time=500;
-volatile uint16_t RotSwitch_Press_Time=100;
+volatile uint16_t Button_Press_time=200;
+volatile uint16_t RotSwitch_Press_Time=200;
 
 uint8_t * USBD_PRODUCT_STRING_FS;
 uint8_t * USBD_SERIALNUMBER_STRING_FS;
-volatile uint8_t USB_Product_String_Unique[10] = {0};
+volatile uint8_t USB_Product_String_Unique[10] = {80,51,49,48,0,0,0,0,0,0}; //P310
 uint8_t USB_Serial_Number_Unique[15] = {0};
 volatile uint8_t USB_polling_interval=0x10;
 volatile uint8_t AxisComb_Percent=50;
@@ -184,23 +118,12 @@ uint8_t Number_DigiButtons=0;
 
 
 uint8_t USB_Product_String[31] = {
-		79, // O
-		83, // S
-		72, // H
-		32, // Space
-		80, // P
-		66, // B
-		32, // Space
-		67, // C
-		111, // o
-		110, // n
-		116, // t
-		114, // r
-		111, // o
-		108, // l
-		108, // l
-		101, // e
-		114, // r
+		76, // L
+		84, // T
+		115, // s
+		105, // i
+		109, // m
+		//32, // Space
 };
 
 
@@ -212,7 +135,7 @@ volatile uint8_t POV_config=0;
 uint32_t * Rot_PINA_IDR, * Rot_PINB_IDR;
 uint16_t Rot_PINA_pin, Rot_PINB_pin;
 uint8_t Number_Rotaries=0,
-		Number_Single_Rotaries=0,
+		Number_Single_Rotaries=0, //LT era 0
 		Number_Rows=0,
 		Number_Columns=0,
 		Number_Buttons=0,
@@ -236,8 +159,8 @@ void gpio_init(void) {
 	// GPIO Ports Clock for GPIOA/B/C/D
 	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPBEN | RCC_APB2ENR_IOPCEN | RCC_APB2ENR_IOPDEN;
 	// Disable JTAG and SWD
-	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
-	AFIO->MAPR = AFIO_MAPR_SWJ_CFG_DISABLE;
+	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;	//LT commentare per debug
+	AFIO->MAPR = AFIO_MAPR_SWJ_CFG_DISABLE;  //LT commentare per debug
 
 	if (*(get_lastpage_addr((uint16_t *)FLASHSIZEREG)) == 0xFFFF) {
 		write_flash();
@@ -260,15 +183,12 @@ void custom_usb_config(void) {
 
 
 	if (USB_Product_String_Unique[0]) {
-		USB_Product_String[17] = 32; // Space
-		USB_Product_String[18] = 40; // (
-		while ((USB_Product_String_Unique[i]) && (i < 10)) {
-			USB_Product_String[19+i] = USB_Product_String_Unique[i];
-			i++;
-		}
-
-		USB_Product_String[19+i] = 41; // )
-		USB_Product_String[19+i+1] = 0;
+			USB_Product_String[5] = 32; // Space dopo "LTsim"
+			while ((USB_Product_String_Unique[i]) && (i < 10)) {
+				USB_Product_String[6+i] = USB_Product_String_Unique[i];
+				i++;
+			}
+			USB_Product_String[6+i] = 0;
 	}
 
 	USBD_PRODUCT_STRING_FS = USB_Product_String;
@@ -312,8 +232,11 @@ void gpio_ports_config(void) {
 			tmpbsrrvalue=0,
 			i,
 			tmp=0;
-//	uint8_t Number_Single_Rotaries_PINA=0,
-//			Number_Single_Rotaries_PINB=0;
+	//uint8_t Number_Single_Rotaries_PINA=0,//LT era commentato
+	//		Number_Single_Rotaries_PINB=0;//LT era commentato
+	//uint8_t numSingleRot_LT_pA=0;
+	//uint8_t numSingleRot_LT_pB=0;
+
 
 	// Reset all prevs states
 	GPIOA->CRL=0x44444444;
@@ -381,20 +304,30 @@ void gpio_ports_config(void) {
 		case Single_Rotary_PINA_1:
 		case Single_Rotary_PINA_2:
 		case Single_Rotary_PINA_4:
-//							Single_rotaries[Number_Single_Rotaries_PINA].PINA=(0x1<<pins[i].pin_number);
+							//Single_rotaries[Number_Single_Rotaries_PINA].PINA=(0x1<<pins[i].pin_number); //LT era commentato
 //							Single_rotaries[Number_Single_Rotaries_PINA].PINA_IDR=pins[i].idr_reg_addr;
 //							Single_rotaries[Number_Single_Rotaries_PINA].PINA_Type=pins[i].pin_type;
-//							Number_Single_Rotaries_PINA++;
+							//Number_Single_Rotaries_PINA++; //LT era commentato
+
+							//Number_Single_Rotaries++; //LT aggiunto
+
+							//Single_rotaries[numSingleRot_LT_pA].PINA=(0x1<<pins[i].pin_number);
+							//numSingleRot_LT_pA++;
+
 							tmpconfvalue=0x02;
 							tmpbsrrvalue=0x10;
 							break;
 		case Single_Rotary_PINB_1:
 		case Single_Rotary_PINB_2:
 		case Single_Rotary_PINB_4:
-//							Single_rotaries[Number_Single_Rotaries_PINB].PINB=(0x1<<pins[i].pin_number);
+							//Single_rotaries[Number_Single_Rotaries_PINB].PINB=(0x1<<pins[i].pin_number); //LT era commentato
 //							Single_rotaries[Number_Single_Rotaries_PINB].PINB_IDR=pins[i].idr_reg_addr;
 //							Single_rotaries[Number_Single_Rotaries_PINB].PINB_Type=pins[i].pin_type;
-//							Number_Single_Rotaries_PINB++;
+							//Number_Single_Rotaries_PINB++; //LT era commentato
+
+							//Single_rotaries[numSingleRot_LT_pB].PINA=(0x1<<pins[i].pin_number);
+							//numSingleRot_LT_pB++;
+
 							tmpconfvalue=0x02;
 							tmpbsrrvalue=0x10;
 							break;
@@ -422,6 +355,8 @@ void gpio_ports_config(void) {
 		*pins[i].conf_reg_addr = (*(pins[i].conf_reg_addr) & (~tmpregmask)) | (tmpconfvalue << (tmp*4));
 		*pins[i].bsrr_reg_addr 	= 1 << (pins[i].pin_number+tmpbsrrvalue);
 	}
+
+	//Number_Single_Rotaries=Number_Single_Rotaries_PINA; //LT
 
 	for (uint8_t i=0; i<Number_Single_Rotaries; i++) {
 		Single_rotaries[i].PINA_IDR=pins[Single_rotaries[i].PINA].idr_reg_addr;
