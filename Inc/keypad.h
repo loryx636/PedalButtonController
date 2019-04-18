@@ -34,7 +34,7 @@
 #include <stdint.h>
 #include "periph_init.h"
 
-#define MAXBUTTONS 64
+//#define MAXBUTTONS 64
 
 
 struct keypad {
@@ -50,7 +50,7 @@ typedef enum {
 	rotswitch,
 } button_type;
 
-void CheckRows(uint8_t column);
+void CheckRows(uint8_t column, uint8_t type);
 void CheckButtons(void);
 void SetButtonState(uint8_t i, GPIO_PinState rowstate, button_type type);
 

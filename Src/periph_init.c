@@ -74,10 +74,18 @@ volatile struct total_config_ config = {
 			.packet_id2 = 4,
 			.packet_id3 = 4,
 			.packet_id4 = 4,
+			.packet_id5 = 4,
+			.packet_id6 = 4,
+			.packet_id7 = 4,
+			.packet_id8 = 4,
 			.operation_code1 = 1,
 			.operation_code2 = 2,
 			.operation_code3 = 3,
 			.operation_code4 = 4,
+			.operation_code5 = 4,
+			.operation_code6 = 4,
+			.operation_code7 = 4,
+			.operation_code8 = 4,
 			.rotary_press_time = 100,
 			.rotary_debounce_time = 50,
 			.button_debounce_time = 50,
@@ -104,22 +112,28 @@ volatile struct total_config_ config = {
 			.POV_config = 0,
 			.axes[0].axis_min_calib_value = 0x1E, //for DimSim
 			.axes[0].axis_max_calib_value = 0x3A3, //for DimSim
-			.axes[0].axis_special = 0,
+			.axes[0].axis_profile = 0,
+			.axes[0].axis_autocalibrate = 0,
 			.axes[1].axis_min_calib_value = 0,
 			.axes[1].axis_max_calib_value = 4095,
-			.axes[1].axis_special = 0,
+			.axes[1].axis_profile = 0,
+			.axes[1].axis_autocalibrate = 0,
 			.axes[2].axis_min_calib_value = 0,
 			.axes[2].axis_max_calib_value = 4095,
-			.axes[2].axis_special = 0,
+			.axes[2].axis_profile = 0,
+			.axes[2].axis_autocalibrate = 0,
 			.axes[3].axis_min_calib_value = 0,
 			.axes[3].axis_max_calib_value = 4095,
-			.axes[3].axis_special = 0,
+			.axes[3].axis_profile = 0,
+			.axes[3].axis_autocalibrate = 0,
 			.axes[4].axis_min_calib_value = 0,
 			.axes[4].axis_max_calib_value = 4095,
-			.axes[4].axis_special = 0,
+			.axes[4].axis_profile = 0,
+			.axes[4].axis_autocalibrate = 0,
 			.axes[5].axis_min_calib_value = 0,
 			.axes[5].axis_max_calib_value = 4095,
-			.axes[5].axis_special = 0,
+			.axes[5].axis_profile = 0,
+			.axes[5].axis_autocalibrate = 0,
 			.pin[0] = Button_GND,		//A0	//AnalogMedSmooth	//AnalogMedSmooth
 			.pin[1] = Button_GND,		//A1	//Analog2Button	//AnalogMedSmooth
 			.pin[2] = Button_GND, 		//A2	//Not_Used		//AnalogMedSmooth
@@ -152,7 +166,185 @@ volatile struct total_config_ config = {
 			.pin[29] = Button_GND, 		//C13	//Not_Used		//Button_COLUMN
 			.pin[30] = Button_GND, 		//C14	//Not_Used		//Button_COLUMN
 			.pin[31] = Button_GND, 		//C15	//Not_Used		//Button_COLUMN
+			.profile_names[0][0] = 'L',
+			.profile_names[0][1] = 'i',
+			.profile_names[0][2] = 'n',
+			.profile_names[0][3] = 'e',
+			.profile_names[0][4] = 'a',
+			.profile_names[0][5] = 'r',
+			.profile_names[0][6] = 0,
+			.profile_names[1][0] = 'E',
+			.profile_names[1][1] = 'x',
+			.profile_names[1][2] = 'p',
+			.profile_names[1][3] = 'o',
+			.profile_names[1][4] = 'n',
+			.profile_names[1][5] = 'e',
+			.profile_names[1][6] = 'n',
+			.profile_names[1][7] = 't',
+			.profile_names[1][8] = '1',
+			.profile_names[1][9] = 0,
+			.profile_names[2][0] = 'E',
+			.profile_names[2][1] = 'x',
+			.profile_names[2][2] = 'p',
+			.profile_names[2][3] = 'o',
+			.profile_names[2][4] = 'n',
+			.profile_names[2][5] = 'e',
+			.profile_names[2][6] = 'n',
+			.profile_names[2][7] = 't',
+			.profile_names[2][8] = '2',
+			.profile_names[2][9] = 0,
+			.profile_names[3][0] = 'S',
+			.profile_names[3][1] = 'h',
+			.profile_names[3][2] = 'a',
+			.profile_names[3][3] = 'p',
+			.profile_names[3][4] = 'e',
+			.profile_names[3][5] = '1',
+			.profile_names[3][6] = 0,
+			.profile_names[4][0] = 'S',
+			.profile_names[4][1] = 'h',
+			.profile_names[4][2] = 'a',
+			.profile_names[4][3] = 'p',
+			.profile_names[4][4] = 'e',
+			.profile_names[4][5] = '2',
+			.profile_names[4][6] = 0,
+			.profile_names[5][0] = 'I',
+			.profile_names[5][1] = 'n',
+			.profile_names[5][2] = 'v',
+			.profile_names[5][3] = 'e',
+			.profile_names[5][4] = 'r',
+			.profile_names[5][5] = 't',
+			.profile_names[5][6] = 'e',
+			.profile_names[5][7] = 'd',
+			.profile_names[5][8] = 0,
+			.axes_shapes1[0][0] = 0x000,
+			.axes_shapes1[0][1] = 0x1D0,
+			.axes_shapes1[0][2] = 0x3A0,
+			.axes_shapes1[0][3] = 0x550,
+			.axes_shapes1[0][4] = 0x720,
+			.axes_shapes1[0][5] = 0x8C0,
+			.axes_shapes1[0][6] = 0xAA0,
+			.axes_shapes1[0][7] = 0xC40,
+			.axes_shapes1[0][8] = 0xE40,
+			.axes_shapes1[0][9] = 0xFFF, //linear
+			.axes_shapes1[1][0] = 0x000,
+			.axes_shapes1[1][1] = 0x580,
+			.axes_shapes1[1][2] = 0x9C0,
+			.axes_shapes1[1][3] = 0xC40,
+			.axes_shapes1[1][4] = 0xE10,
+			.axes_shapes1[1][5] = 0xF10,
+			.axes_shapes1[1][6] = 0xF80,
+			.axes_shapes1[1][7] = 0xFFF,
+			.axes_shapes1[1][8] = 0xFFF,
+			.axes_shapes1[1][9] = 0xFFF, //exp1
+			.axes_shapes1[2][0] = 0x000,
+			.axes_shapes1[2][1] = 0x000,
+			.axes_shapes1[2][2] = 0x000,
+			.axes_shapes1[2][3] = 0x000,
+			.axes_shapes1[2][4] = 0x060,
+			.axes_shapes1[2][5] = 0x130,
+			.axes_shapes1[2][6] = 0x270,
+			.axes_shapes1[2][7] = 0x440,
+			.axes_shapes1[2][8] = 0x860,
+			.axes_shapes1[2][9] = 0xFFF, //exp2
+			.axes_shapes2[0][0] = 0x000,
+			.axes_shapes2[0][1] = 0x000,
+			.axes_shapes2[0][2] = 0x060,
+			.axes_shapes2[0][3] = 0x1A0,
+			.axes_shapes2[0][4] = 0x4B0,
+			.axes_shapes2[0][5] = 0xB70,
+			.axes_shapes2[0][6] = 0xE40,
+			.axes_shapes2[0][7] = 0xFB0,
+			.axes_shapes2[0][8] = 0xFF0,
+			.axes_shapes2[0][9] = 0xFFF, //shape1
+			.axes_shapes2[1][0] = 0x000,
+			.axes_shapes2[1][1] = 0x440,
+			.axes_shapes2[1][2] = 0x650,
+			.axes_shapes2[1][3] = 0x780,
+			.axes_shapes2[1][4] = 0x7C0,
+			.axes_shapes2[1][5] = 0x7F0,
+			.axes_shapes2[1][6] = 0x860,
+			.axes_shapes2[1][7] = 0x960,
+			.axes_shapes2[1][8] = 0xBD0,
+			.axes_shapes2[1][9] = 0xFFF, //shape2
+			.axes_shapes2[1][0] = 0xFFF,
+			.axes_shapes2[2][1] = 0xE40,
+			.axes_shapes2[2][2] = 0xC40,
+			.axes_shapes2[2][3] = 0xAA0,
+			.axes_shapes2[2][4] = 0x8C0,
+			.axes_shapes2[2][5] = 0x720,
+			.axes_shapes2[2][6] = 0x550,
+			.axes_shapes2[2][7] = 0x3A0,
+			.axes_shapes2[2][8] = 0x1D0,
+			.axes_shapes2[2][9] = 0x000, //inverted
 };
+
+volatile struct mouse_report_ mouse_report = {
+		.packet_id = 6,
+		.left_button = 0,
+		.right_button = 0,
+		.middle_button = 0,
+		.additional_buttons = 0,
+		.X_pos = 0,
+		.Y_pos = 0,
+		.mouse_wheel_pos = 0,
+};
+
+volatile struct gamepad_report_ gamepad_report = {
+		.packet_id = 1,
+		.buttons = 0,
+		.axis[0] = 0,
+		.axis[1] = 0,
+		.axis[2] = 0,
+		.axis[3] = 0,
+		.axis[4] = 0,
+		.axis[5] = 0,
+		.pov[0] = 8,
+		.pov[1] = 8,
+		.pov[2] = 8,
+		.pov[3] = 8,
+};
+
+volatile struct keyboard_report_ keyboard_report = {
+		.packet_id = 7,
+		.left_ctrl = 0,
+		.left_shft = 0,
+		.left_alt = 0,
+		.left_gui = 0,
+		.right_ctrl = 0,
+		.right_shft = 0,
+		.right_alt = 0,
+		.right_gui = 0,
+		.key1 = 0,
+		.key2 = 0,
+		.key3 = 0,
+		.key4 = 0,
+		.key5 = 0,
+		.key6 = 0,
+};
+
+volatile struct multimedia_report_ multimedia_report = {
+		.packet_id = 9,
+		.scan_next = 0,
+		.scan_prev = 0,
+		.stop = 0,
+		.play = 0,
+		.volume_mute = 0,
+		.volume_down = 0,
+		.volume_up = 0,
+//		.browser = 0,
+};
+
+volatile struct sensor_report_ sensor_report = {
+		.packet_id = 5,
+		.operation_code = 254,
+		.sensor_value[0] = 0,
+		.sensor_value[1] = 0,
+		.sensor_value[2] = 0,
+		.sensor_value[3] = 0,
+		.sensor_value[4] = 0,
+		.sensor_value[5] = 0,
+};
+
 
 //uint8_t * USBD_PRODUCT_STRING_FS;
 uint8_t * USBD_SERIALNUMBER_STRING_FS;
@@ -169,27 +361,13 @@ volatile struct a2b {
     uint8_t buttons_number;
     uint16_t buttons_intervals[MAX_A2B_BUTTONS];
 } A2Bstore[MAX_A2B_INPUTS] = {0};
+volatile uint16_t axes_shapes[MAX_AXES][SHAPEVALUES];
 
-//TODO not sure why it needs to be global
-/*uint8_t USB_Product_String[31] = {
-		79, // O
-		83, // S
-		72, // H
-		32, // Space
-		80, // P
-		66, // B
-		32, // Space
-		67, // C
-		111, // o
-		110, // n
-		116, // t
-		114, // r
-		111, // o
-		108, // l
-		108, // l
-		101, // e
-		114, // r
-};*/
+volatile uint8_t SBstore[MAX_BUTTONS]={0};
+volatile uint8_t keyboard_exists = 0;
+volatile uint8_t multimedia_exists = 0;
+
+uint8_t total_buttons = 0;
 
 uint32_t * Rot_PINA_IDR, * Rot_PINB_IDR;
 uint16_t Rot_PINA_pin, Rot_PINB_pin;
@@ -204,12 +382,19 @@ uint8_t Number_Rotaries=0,
 //uint8_t buttons_offset=0;
 uint8_t encoders_offset=0;
 volatile uint32_t ADC1Values[ADC_BUFF_SIZE];
-uint32_t ADC1Prevs_Values[ADC_BUFF_SIZE]={0};
+//uint32_t ADC1Prevs_Values[ADC_BUFF_SIZE]={0};
 volatile uint64_t millis;
 uint8_t Number_Channels=0;
 extern volatile uint8_t USBSendBuffer[USEDPINS+1];
+volatile uint8_t connected_mode;
 
 extern uint8_t USBD_CUSTOM_HID_CfgDesc[41];
+
+uint8_t mouse_inputs=0;
+
+const uint8_t FIR7_coeff[] = {1,1,1,4,1,1,1};
+const uint8_t FIR5_coeff[] = {1,2,4,2,1};
+const uint8_t FIR3_coeff[] = {2,6,2};
 
 
 void gpio_init(void) {
@@ -240,7 +425,7 @@ void gpio_init(void) {
 
 
 void custom_usb_config(void) {
-	uint8_t i=0;
+	//uint8_t i=0;
 	uint32_t * curradr;
 	uint32_t id1,id2,id3;
 	uint8_t mod;
@@ -327,7 +512,7 @@ void gpio_ports_config(void) {
 //	Number_AnalogButtons = 0;
 	Number_DigiButtons = 0;
 	extern volatile struct rots RotaryStore[USEDPINS];
-	extern struct keypad buttons[MAXBUTTONS];
+	extern struct keypad buttons[MAX_BUTTONS];
 
 	for (uint8_t i=0; i<USEDPINS; i++) {
 			Single_rotaries[i].PINA_IDR = 0;
@@ -356,10 +541,10 @@ void gpio_ports_config(void) {
 
 	for (uint8_t i=0; i<ADC_BUFF_SIZE; i++) {
 		ADC1Values[i] = 0;
-		ADC1Prevs_Values[i] = 0;
+//		ADC1Prevs_Values[i] = 0;
 	}
 
-	for (uint8_t i=0; i<MAXBUTTONS; i++){
+	for (uint8_t i=0; i<MAX_BUTTONS; i++){
 		buttons[i].current_state = 0;
 		buttons[i].pressed = 0;
 		buttons[i].prev_state = 0;
@@ -393,14 +578,17 @@ void gpio_ports_config(void) {
 		case AnalogLowSmooth:
 		case AnalogMedSmooth:
 		case AnalogHighSmooth:
-		case AnalogNoSmooth:Number_Channels++;
+		case AnalogNoSmooth:
+		case Analog2Button: Number_Channels++;
 							tmpconfvalue=0x0;
 							tmpbsrrvalue=0x10;
 							break;
-		case Analog2Button: Number_Channels++;
-							//Number_AnalogButtons++;
+		case Analog2MouseX:
+		case Analog2MouseY:
+		case Analog2MouseWheel: Number_Channels++;
 							tmpconfvalue=0x0;
 							tmpbsrrvalue=0x10;
+							mouse_inputs++;
 							break;
 		case Chain_Rotary_PINA:
 							tmpconfvalue=0x8;
@@ -428,7 +616,6 @@ void gpio_ports_config(void) {
 							break;
 		case Chain_Rotary_Enc_1:
 		case Chain_Rotary_Enc_2:
-		case Chain_Rotary_Enc_4:
 							Number_Rotaries++;
 							tmpconfvalue=0x02;
 							tmpbsrrvalue=0x10;
@@ -506,19 +693,37 @@ void gpio_ports_config(void) {
 		}
 	}
 
+	for (uint8_t i=0; i<MAX_BUTTONS;i++){
+		if (i<MAX_BUTTONS/2) SBstore[i] = config.buttons_types1st[i];
+		else SBstore[i] = config.buttons_types2nd[i-MAX_BUTTONS/2];
+		if (((SBstore[i] >= a_button) && (SBstore[i] <= space_button)) ||
+			((SBstore[i] >= f1_button) && (SBstore[i] <= f12_button)) ||
+			((SBstore[i] >= insert_button) && (SBstore[i] <= uparrow_button))) {
+			keyboard_exists = 1;
+		}
+		if ((SBstore[i] >= volumemute_button) && (SBstore[i] <= volumedown_button)) {
+			multimedia_exists = 1;
+		}
+ 	}
+
 	Number_RotSwitches = Number_Poles * Number_Wires;
-	encoders_offset = (Number_Buttons + Number_RotSwitches)/8;// + 2;
-	if (((Number_Buttons + Number_RotSwitches)%8) == 0) encoders_offset++; else encoders_offset=encoders_offset+2;
+	encoders_offset = (Number_Buttons + Number_RotSwitches);///8;// + 2;
+	total_buttons = (MAX_BUTTONS > (encoders_offset + config.total_single_encoders + Number_Rotaries)) ? MAX_BUTTONS : (encoders_offset + config.total_single_encoders + Number_Rotaries);
+	//if (((Number_Buttons + Number_RotSwitches)%8) == 0) encoders_offset++; else encoders_offset=encoders_offset+2;
 
 
 	adc_init();
 
 	for (uint8_t i=0;i<MAX_AXES;i++) {
-			  if (config.axes[i].axis_special == 1) {
-				  config.axes[i].axis_min_calib_value = 4095;
-				  config.axes[i].axis_max_calib_value = 1;
-			  }
-		  }
+		if (config.axes[i].axis_autocalibrate == 1) {
+			config.axes[i].axis_min_calib_value = 4095;
+			config.axes[i].axis_max_calib_value = 1;
+		}
+        for (uint8_t j=0; j<10; j++) {
+            if (i<MAX_AXES/2) axes_shapes[i][j] = config.axes_shapes1[i][j];
+            else axes_shapes[i][j] = config.axes_shapes2[i-MAX_AXES/2][j];
+        }
+	}
 
 	if (config.combined_axis_enabled) {
 		uint8_t lastaxis=0;
@@ -599,7 +804,8 @@ void adc_init(void) {
 	for (uint8_t i=0;i<USEDPINS;i++){
 		if ((config.pin[i] == AnalogNoSmooth) || (config.pin[i] == AnalogLowSmooth) ||
 				(config.pin[i] == AnalogMedSmooth) || (config.pin[i] == AnalogHighSmooth) ||
-				(config.pin[i] == Analog2Button)) {
+				(config.pin[i] == Analog2Button) ||
+				(config.pin[i] == Analog2MouseX) || (config.pin[i] == Analog2MouseY) || (config.pin[i] == Analog2MouseWheel)) {
 			if (channel < 6) {
 				ADC1->SQR3 |= pins[i].pin_number << (5*channel); // for A0-A5
 			} else {
@@ -683,10 +889,13 @@ void fill_buffer_4_axises(void) {
 	  for (uint8_t i=0;i<USEDPINS;i++) {
 		  switch (config.pin[i]) {
 		  	  case AnalogNoSmooth:		  processing_axises(Ainput++, 100, i); break;
-		  	  case AnalogLowSmooth:	  	  processing_axises(Ainput++, 60, i); break;
-		  	  case AnalogMedSmooth:		  processing_axises(Ainput++, 30, i); break;
-		  	  case AnalogHighSmooth:	  processing_axises(Ainput++, 1, i); break;
+		  	  case AnalogLowSmooth:	  	  processing_axises(Ainput++, 3, i); break;
+		  	  case AnalogMedSmooth:		  processing_axises(Ainput++, 5, i); break;
+		  	  case AnalogHighSmooth:	  processing_axises(Ainput++, 7, i); break;
 		  	  case Analog2Button:		  processing_axises(Ainput++, 200+A2Binput++, i); break;
+		  	  case Analog2MouseX:		  processing_axises(Ainput++, 101, i); break;
+		  	  case Analog2MouseY:		  processing_axises(Ainput++, 102, i); break;
+		  	  case Analog2MouseWheel:	  processing_axises(Ainput++, 103, i); break;
 		  	  default:					  break;
 		  }
 	  }
@@ -696,8 +905,8 @@ void fill_buffer_4_axises(void) {
 void processing_axises(uint8_t Ainput, uint8_t Kstab, uint8_t i) {
 
 	uint32_t curr = 0;
-	uint32_t optvalue =0;
-	uint32_t mapvalue=0;
+	uint32_t volatile optvalue =0;
+	uint32_t volatile mapvalue=0;
 	uint8_t endvalue;
 	uint8_t Number_Axes=0;
 	uint8_t button = Number_DigiButtons;
@@ -705,13 +914,39 @@ static	uint32_t AxisComboValue=0;
 static uint8_t pincount=0;
 static uint8_t Axis=0;
 
-	Number_Axes=Number_Channels-config.analog_2_button_inputs-1;
+	Number_Axes=Number_Channels-config.analog_2_button_inputs-mouse_inputs-1;
 
 	curr = ADC1Values[Ainput];
+	sensor_report.sensor_value[Ainput] = ADC1Values[Ainput];
+
+	if (Kstab == 100) optvalue = curr;
+		else optvalue = fir_smoothing(curr,Ainput,Kstab);
+
+
+	if (Kstab == 101) {
+		int8_t mouse_x = (int8_t)map(curr, 0, 4095, MOUSEMIN, MOUSEMAX);
+		if (abs(mouse_x) > MOUSE_THRESHOLD)		mouse_report.X_pos =  mouse_x;
+			else mouse_report.X_pos = 0;
+		return;
+	}
+	if (Kstab == 102) {
+		int8_t mouse_y = (int8_t)map(curr, 0, 4095, MOUSEMIN, MOUSEMAX);
+		if (abs(mouse_y) > MOUSE_THRESHOLD)		mouse_report.Y_pos = mouse_y;
+			else mouse_report.Y_pos = 0;
+		return;
+	}
+	if (Kstab == 103) {
+		int8_t mouse_wheel = (int8_t)map(curr, 0, 4095, MOUSEMIN, MOUSEMAX);
+		if (abs(mouse_wheel) > MOUSE_THRESHOLD)		mouse_report.mouse_wheel_pos = mouse_wheel;
+			else mouse_report.mouse_wheel_pos = 0;
+		return;
+	}
+
+
 
 	if (Kstab > 199) {
-		optvalue = (80 *(int32_t)(curr - ADC1Prevs_Values[Ainput]))/100 + ADC1Prevs_Values[Ainput];
-		ADC1Prevs_Values[Ainput] = optvalue;
+//		optvalue = (80 *(int32_t)(curr - ADC1Prevs_Values[Ainput]))/100 + ADC1Prevs_Values[Ainput];
+//		ADC1Prevs_Values[Ainput] = optvalue;
 		for (uint8_t i=0; i<(Kstab-200);i++){
 			button += A2Bstore[i].buttons_number;
 		}
@@ -734,10 +969,9 @@ static uint8_t Axis=0;
 	}
 
 
-	optvalue = (Kstab *(int32_t)(curr - ADC1Prevs_Values[Ainput]))/100 + ADC1Prevs_Values[Ainput];
+//	optvalue = (Kstab *(int32_t)(curr - ADC1Prevs_Values[Ainput]))/100 + ADC1Prevs_Values[Ainput];
 
-
-	if (config.axes[Axis].axis_special == 1) {
+	if (config.axes[Axis].axis_autocalibrate == 1) {
 		if (curr < config.axes[Axis].axis_min_calib_value) config.axes[Axis].axis_min_calib_value = curr;
 		if (curr > config.axes[Axis].axis_max_calib_value) config.axes[Axis].axis_max_calib_value = curr;
 	} else {
@@ -745,7 +979,7 @@ static uint8_t Axis=0;
 		if (optvalue > config.axes[Axis].axis_max_calib_value) optvalue = config.axes[Axis].axis_max_calib_value;
 	}
 
-	ADC1Prevs_Values[Ainput] = optvalue;
+//	ADC1Prevs_Values[Ainput] = optvalue;
 
 	if (config.combined_axis_enabled) {
 		Number_Axes-=2;
@@ -777,9 +1011,7 @@ static uint8_t Axis=0;
 		if (pincount==2) pincount=0;
 		//Combined axis will be always on AXIS6
 		mapvalue = map(optvalue, config.axes[5].axis_min_calib_value, config.axes[5].axis_max_calib_value, 0, 4095);
-//		ADC1Prevs_Values[Ainput] = optvalue;
-		USBSendBuffer[9+(10)] = LOBYTE(mapvalue);
-		USBSendBuffer[10+(10)] = HIBYTE(mapvalue);
+		gamepad_report.axis[5] = mapvalue;
 		return;
 	}
 	}
@@ -787,8 +1019,15 @@ static uint8_t Axis=0;
 
 	mapvalue = map(optvalue, config.axes[Axis].axis_min_calib_value, config.axes[Axis].axis_max_calib_value, 0, 4095);
 
-	USBSendBuffer[9+(2*Axis)] = LOBYTE(mapvalue);
-	USBSendBuffer[10+(2*Axis)] = HIBYTE(mapvalue);
+	uint8_t  current_part = mapvalue/(MAX_ADC_RES/(SHAPEVALUES-1));
+
+    int16_t  shpvalue = getSplinePoint(axes_shapes[config.axes[Axis].axis_profile][current_part],
+    							axes_shapes[config.axes[Axis].axis_profile][current_part+1], mapvalue%(MAX_ADC_RES/(SHAPEVALUES-1)));
+    if (shpvalue > MAX_ADC_RES) shpvalue = MAX_ADC_RES;
+    if (shpvalue < 0) shpvalue = 0;
+
+
+	gamepad_report.axis[Axis] = shpvalue;
 	Axis++;
 
 	if ((Axis > MAX_AXES-1) || (Axis > Number_Axes)) Axis=0;
@@ -800,3 +1039,37 @@ uint32_t map(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uin
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+uint16_t getSplinePoint(uint16_t p1, uint16_t p2, uint16_t distance){
+	return (p1 + ((p2 - p1)*distance)/(MAX_ADC_RES/(SHAPEVALUES)));
+}
+
+uint16_t fir_smoothing(uint16_t orig_value, uint16_t input, uint8_t window_size){
+	uint16_t smooth_value = 0;
+	static uint16_t adc_store[ADC_BUFF_SIZE][FIRMAXWINDOWSSIZE] = {0};
+
+	for (uint8_t i=0;i<window_size-1;i++) {
+		adc_store[input][i] = adc_store[input][i+1];
+		if (window_size == 3)
+			smooth_value += FIR3_coeff[i] * adc_store[input][i] / 10;
+		if (window_size == 5)
+			smooth_value += FIR5_coeff[i] * adc_store[input][i] / 10;
+		if (window_size == 7)
+			smooth_value += FIR7_coeff[i] * adc_store[input][i] / 10;
+
+	  }
+	adc_store[input][window_size-1] = orig_value;
+
+	if (window_size == 3)
+		smooth_value += FIR3_coeff[window_size-1] * adc_store[input][window_size-1] / 10;
+	if (window_size == 5)
+		smooth_value += FIR5_coeff[window_size-1] * adc_store[input][window_size-1] / 10;
+	if (window_size == 7)
+		smooth_value += FIR7_coeff[window_size-1] * adc_store[input][window_size-1] / 10;
+
+
+
+	adc_store[input][window_size-1] = smooth_value;
+	smooth_value = adc_store[input][window_size/2];
+
+	return smooth_value;
+}
