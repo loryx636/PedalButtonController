@@ -33,6 +33,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_custom_hid_if.h"
 /* USER CODE BEGIN INCLUDE */
+#include "..\common_types\common_structs.h"
+#include "periph_init.h"
 /* USER CODE END INCLUDE */
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
@@ -77,115 +79,175 @@
  */
 __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DESC_SIZE] __ALIGN_END =
 {
-	    0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
-	    0x09, 0x05,                    // USAGE (Game Pad)
-	    0xa1, 0x01,                    // COLLECTION (Application)
-	    0x85, 0x01,                    //   REPORT_ID (1)
-	    0x05, 0x09,                    //     USAGE_PAGE (Button)
-	    0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
-	    0x25, 0x01,                    //     LOGICAL_MAXIMUM (1)
-	    0x75, 0x01,                    //     REPORT_SIZE (1)
-	    0x95, 0x40,                    //     REPORT_COUNT (64)
-	    0x19, 0x01,                    //     USAGE_MINIMUM (Button 1)
-	    0x29, 0x40,                    //     USAGE_MAXIMUM (Button 64)
-	    0x81, 0x02,                    //     INPUT (Data,Var,Abs)
-	    0x05, 0x01,                    //     USAGE_PAGE (Generic Desktop)
-	    0x09, 0x33,                    //     USAGE (Rx)
-	    0x09, 0x34,                    //     USAGE (Ry)
-	    0x09, 0x35,                    //     USAGE (Rz)
-	    0x09, 0x36,                    //     USAGE (Slider1)
-	    0x09, 0x36,                    //     USAGE (Slider2)
-	    0x09, 0x32,                    //     USAGE (Z)
-	    0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
-	    0x26, 0xff, 0x0f,              //     LOGICAL_MAXIMUM (4095)
-	    0x75, 0x10,                    //     REPORT_SIZE (16)
-	    0x95, 0x06,                    //     REPORT_COUNT (6)
-	    0x81, 0x02,                    //     INPUT (Data,Var,Abs)
-	    0x09, 0x39,                    //   USAGE (Hat switch)
-	    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
-	    0x25, 0x07,                    //   LOGICAL_MAXIMUM (7)
-	    0x35, 0x00,                    //   PHYSICAL_MINIMUM (0)
-	    0x46, 0x3b, 0x01,              //   PHYSICAL_MAXIMUM (315)
-	    0x65, 0x12,                    //   UNIT (SI Rot:Angular Pos)
-	    0x75, 0x08,                    //   REPORT_SIZE (8)
-	    0x95, 0x01,                    //   REPORT_COUNT (1)
-	    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
-	    0x09, 0x39,                    //   USAGE (Hat switch)
-	    0x65, 0x12,                    //   UNIT (SI Rot:Angular Pos)
-	    0x75, 0x08,                    //   REPORT_SIZE (8)
-	    0x95, 0x01,                    //   REPORT_COUNT (1)
-	    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
-	    0x09, 0x39,                    //   USAGE (Hat switch)
-	    0x65, 0x12,                    //   UNIT (SI Rot:Angular Pos)
-	    0x75, 0x08,                    //   REPORT_SIZE (8)
-	    0x95, 0x01,                    //   REPORT_COUNT (1)
-	    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
-	    0x09, 0x39,                    //   USAGE (Hat switch)
-	    0x65, 0x12,                    //   UNIT (SI Rot:Angular Pos)
-	    0x75, 0x08,                    //   REPORT_SIZE (8)
-	    0x95, 0x01,                    //   REPORT_COUNT (1)
-	    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
-	    0x85, 0x02,                    //   REPORT_ID (2)
-	    0x09, 0x01,                    //   USAGE (Vendor Usage 1)
-	    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
-	    0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
-	    0x95, 0x3F, //0x20,                    //   REPORT_COUNT (32)
-	    0x75, 0x08,                    //   REPORT_SIZE (8)
-	    0x91, 0x82,                    //   OUTPUT (Data,Var,Abs,Vol)
-//	    0x85, 0x06,                    //   REPORT_ID (6)
-//	    0x09, 0x01,                    //   USAGE (Vendor Usage 1)
-//	    0x95, 0x3F, //0x20,                    //   REPORT_COUNT (32)
-//	    0x75, 0x08,                    //   REPORT_SIZE (8)
-//	    0x91, 0x82,                    //   OUTPUT (Data,Var,Abs,Vol)
-	    0x85, 0x03,                    //   REPORT_ID (3)
-	    0x09, 0x02,                    //   USAGE (Vendor Usage 2)
-	    0x95, 0x01,                    //   REPORT_COUNT (1)
-	    0x75, 0x08,                    //   REPORT_SIZE (8)
-	    0x91, 0x82,                    //   OUTPUT (Data,Var,Abs,Vol)
-	    0x85, 0x04,                    //   REPORT_ID (4)
-	    0x09, 0x03,                    //   USAGE (Vendor Usage 3)
-	    0x95, 0x3F, //0x20,                    //   REPORT_COUNT (32)
-	    0x75, 0x08,                    //   REPORT_SIZE (8)
-	    0x81, 0x82,                    //   INPUT (Data,Var,Abs,Vol)
-//	    0x85, 0x05,                    // 	REPORT_ID (5)
-//	    0x09, 0x03,                    // 	USAGE (Vendor Usage 3)
-//	    0x95, 0x3F, //0x20,                    // 	REPORT_COUNT (32)
-//	    0x75, 0x08,                    // 	REPORT_SIZE (8)
-//	    0x81, 0x82,                    // 	INPUT (Data,Var,Abs,Vol)
-	    0xc0                           // END_COLLECTION
+		// Keyboard
+	    	0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+			0x09, 0x06,                    // USAGE (Keyboard)
+		    0xa1, 0x01,                    // COLLECTION (Application)
+		    0x85, 0x07,                    //   REPORT_ID (7)
+		    0x05, 0x07,                    //   USAGE_PAGE (Keyboard)
+		    0x19, 0xe0,                    //   USAGE_MINIMUM (Keyboard LeftControl)
+		    0x29, 0xe7,                    //   USAGE_MAXIMUM (Keyboard Right GUI)
+		    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+		    0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+		    0x75, 0x01,                    //   REPORT_SIZE (1)
+		    0x95, 0x08,                    //   REPORT_COUNT (8)
+		    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+		    0x95, 0x01,                    //   REPORT_COUNT (1)
+		    0x75, 0x08,                    //   REPORT_SIZE (8)
+		    0x81, 0x03,                    //   INPUT (Cnst,Var,Abs)
+		    0x95, 0x06,                    //   REPORT_COUNT (6)
+		    0x75, 0x08,                    //   REPORT_SIZE (8)
+		    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+		    0x25, 0xFF,                    //   LOGICAL_MAXIMUM (255)
+		    0x05, 0x07,                    //   USAGE_PAGE (Keyboard)
+		    0x19, 0x00,                    //   USAGE_MINIMUM (Reserved (no event indicated))
+		    0x29, 0x65,                    //   USAGE_MAXIMUM (Keyboard Application)
+		    0x81, 0x00,                    //   INPUT (Data,Ary,Abs)
+			0xc0,                          // END_COLLECTION
+			// System Control
+//			0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+//		    0x09, 0x80,                    // USAGE (System Control)
+//		    0xa1, 0x01,                    // COLLECTION (Application)
+//		    0x85, 0x08,                    //   REPORT_ID (8)
+//		    0x19, 0x81,                    //   USAGE_MINIMUM (System Power Down)
+//		    0x29, 0x83,                    //   USAGE_MAXIMUM (System Wake Up)
+//		    0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+//		    0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+//		    0x95, 0x03,                    //   REPORT_COUNT (3)
+//		    0x75, 0x01,                    //   REPORT_SIZE (1)
+//		    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+//		    0x95, 0x01,                    //   REPORT_COUNT (1)
+//		    0x75, 0x05,                    //   REPORT_SIZE (5)
+//		    0x81, 0x01,                    //   INPUT (Cnst,Ary,Abs)
+//			0xc0,                          //     END_COLLECTION
+			// Mouse
+			0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+			0x09, 0x02,                    // USAGE (Mouse)
+			0xa1, 0x01,                    // COLLECTION (Application)
+			0x85, 0x06,                    //   REPORT_ID (6)
+			0x09, 0x01,                    //   USAGE (Pointer)
+			0x05, 0x09,                    //     USAGE_PAGE (Button)
+			0x19, 0x01,                    //     USAGE_MINIMUM (Button 1)
+			0x29, 0x08,                    //     USAGE_MAXIMUM (Button 8)
+			0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
+			0x25, 0x01,                    //     LOGICAL_MAXIMUM (1)
+			0x95, 0x08,                    //     REPORT_COUNT (8)
+			0x75, 0x01,                    //     REPORT_SIZE (1)
+			0x81, 0x02,                    //     INPUT (Data,Var,Abs)
+			0x05, 0x01,                    //     USAGE_PAGE (Generic Desktop)
+			0x09, 0x30,                    //     USAGE (X)
+			0x09, 0x31,                    //     USAGE (Y)
+			0x09, 0x38,                    //     USAGE (Wheel)
+			0x15, 0x81,                    //     LOGICAL_MINIMUM (-127)
+			0x25, 0x7f,                    //     LOGICAL_MAXIMUM (127)
+			0x75, 0x08,                    //     REPORT_SIZE (8)
+			0x95, 0x03,                    //     REPORT_COUNT (3)
+			0x81, 0x06,                    //     INPUT (Data,Var,Rel)
+		    0xc0  ,                         // END_COLLECTION
+			// Gamepad
+			0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+			0x09, 0x05,                    // USAGE (Game Pad)
+			0xa1, 0x01,                    // COLLECTION (Application)
+			0x85, 0x01,                    //   REPORT_ID (1)
+			0x05, 0x09,                    //     USAGE_PAGE (Button)
+			0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
+			0x25, 0x01,                    //     LOGICAL_MAXIMUM (1)
+			0x75, 0x01,                    //     REPORT_SIZE (1)
+			0x95, 0x40,                    //     REPORT_COUNT (64)
+			0x19, 0x01,                    //     USAGE_MINIMUM (Button 1)
+			0x29, 0x40,                    //     USAGE_MAXIMUM (Button 64)
+			0x81, 0x02,                    //     INPUT (Data,Var,Abs)
+			0x05, 0x01,                    //     USAGE_PAGE (Generic Desktop)
+			0x09, 0x33,                    //     USAGE (Rx)
+			0x09, 0x34,                    //     USAGE (Ry)
+			0x09, 0x35,                    //     USAGE (Rz)
+			0x09, 0x36,                    //     USAGE (Slider1)
+			0x09, 0x36,                    //     USAGE (Slider2)
+			0x09, 0x32,                    //     USAGE (Z)
+			0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
+			0x26, 0xff, 0x0f,              //     LOGICAL_MAXIMUM (4095)
+			0x75, 0x10,                    //     REPORT_SIZE (16)
+			0x95, 0x06,                    //     REPORT_COUNT (6)
+			0x81, 0x02,                    //     INPUT (Data,Var,Abs)
+			0x09, 0x39,                    //   USAGE (Hat switch)
+			0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+			0x25, 0x07,                    //   LOGICAL_MAXIMUM (7)
+			0x35, 0x00,                    //   PHYSICAL_MINIMUM (0)
+			0x46, 0x3b, 0x01,              //   PHYSICAL_MAXIMUM (315)
+			0x65, 0x12,                    //   UNIT (SI Rot:Angular Pos)
+			0x75, 0x08,                    //   REPORT_SIZE (8)
+			0x95, 0x01,                    //   REPORT_COUNT (1)
+			0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+			0x09, 0x39,                    //   USAGE (Hat switch)
+			0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+			0x09, 0x39,                    //   USAGE (Hat switch)
+			0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+			0x09, 0x39,                    //   USAGE (Hat switch)
+			0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+			// Custom Stuff
+			0x06, 0x00, 0xff,              //   USAGE_PAGE (Vendor Defined Page 1)
+			0x85, 0x02,                    //   REPORT_ID (2)
+			0x09, 0x01,                    //   USAGE (Vendor Usage 1)
+			0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+			0x26, 0xff, 0x00,              //   LOGICAL_MAXIMUM (255)
+			0x95, 0x3F,                     //   REPORT_COUNT (63)
+			0x75, 0x08,                    //   REPORT_SIZE (8)
+			0x91, 0x82,                    //   OUTPUT (Data,Var,Abs,Vol)
+			0x85, 0x05,                    //   REPORT_ID (5)
+			0x09, 0x04,                    //   USAGE (Vendor Usage 4)
+			0x81, 0x82,                    //   INPUT (Data,Var,Abs,Vol)
+			0x85, 0x04,                    //   REPORT_ID (4)
+			0x09, 0x03,                    //   USAGE (Vendor Usage 3)
+			0x81, 0x82,                    //   INPUT (Data,Var,Abs,Vol)
+			0x85, 0x03,                    //   REPORT_ID (3)
+			0x09, 0x02,                    //   USAGE (Vendor Usage 2)
+			0x95, 0x01,                    //   REPORT_COUNT (1)
+			0x75, 0x08,                    //   REPORT_SIZE (8)
+			0x91, 0x82,                    //   OUTPUT (Data,Var,Abs,Vol)
+			0xc0,                           // END_COLLECTION
+			// Additional Multimedia keys
+			0x05, 0x0c,                    // USAGE_PAGE (Consumer Devices)
+			0x09, 0x01,                    // USAGE (Consumer Control)
+			0xa1, 0x01,                    // COLLECTION (Application)
+			0x85, 0x09,                    //   REPORT_ID (9)
+			0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
+			0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
+			0x75, 0x01,                    //   REPORT_SIZE (1)
+			0x95, 0x08,                    //   REPORT_COUNT (8)
+			0x09, 0xb5,					   //   USAGE (Next Track)
+			0x09, 0xb6,					   //   USAGE (Previous Track)
+			0x09, 0xb7,					   //   USAGE (Stop)
+			0x09, 0xb8,					   //   USAGE (Eject)
+			0x09, 0xcd,                    //   USAGE (Play/Pause)
+			0x09, 0xe2,                    //   USAGE (Mute)
+			0x09, 0xea,                    //   USAGE (Volume Down)
+			0x09, 0xe9,                    //   USAGE (Volume Up)
+			0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+//			0x0a, 0x92, 0x01,              //   USAGE (AL Calculator)
+//			0x0a, 0x94, 0x01,              //   USAGE (AL Local Machine Browser)
+//			0x0a, 0x9F, 0x01,              //   USAGE (AL Control Panel)
+//			0x0a, 0xA1, 0x01,              //   USAGE (AL Task Manager)
+//			0x0a, 0xC7, 0x01,              //   USAGE (AL Audio Player)
+//			0x0a, 0x23, 0x02,              //   USAGE (AC Home)
+//			0x0a, 0x24, 0x02,              //   USAGE (AC Back)
+//			0x0a, 0x25, 0x02,              //   USAGE (AC Forward)
+//			0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+			0xc0,                          //     END_COLLECTION
 
-}; 
+};
+
 /* USB handler declaration */
 /* Handle for USB Full Speed IP */
   USBD_HandleTypeDef  *hUsbDevice_0;
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
   extern struct pin_conf pins[USEDPINS];
-  extern struct axis_conf axises[AXISES];
-  extern uint8_t POV_config;
-  volatile extern uint16_t Rot_Press_Time;
-  volatile extern uint16_t Rot_Debounce_Time;
-  volatile extern uint16_t Button_Debounce_Time;
-  volatile extern uint16_t Button_Press_time;
-  volatile extern uint16_t RotSwitch_Press_Time;
-  volatile extern uint8_t USB_Product_String_Unique[10];
   volatile extern uint8_t USB_Serial_Number_Unique[13];
-  volatile extern uint8_t USB_polling_interval;
-  volatile extern struct rot_conf Single_rotaries[USEDPINS];
-  extern uint8_t Number_Single_Rotaries;
-  volatile extern uint8_t AxisComb_Percent;
-  volatile extern uint8_t AxisComb_pin1;
-  volatile extern uint8_t AxisComb_pin2;
-  volatile extern uint8_t AxisCombEnabled;
-  volatile extern uint16_t AxisCombPin1Min;
-  volatile extern uint16_t AxisCombPin1Max;
-  volatile extern uint16_t AxisCombPin2Min;
-  volatile extern uint16_t AxisCombPin2Max;
-  volatile extern uint8_t AxisCombPin1AC;
-  volatile extern uint8_t AxisCombPin2AC;
-  volatile extern uint8_t AxisCombCoop;
-  volatile extern uint8_t AxisCombSep;
-  volatile extern uint16_t Analog2ButtonThreshold;
+  volatile extern uint8_t send_buffer[USBD_CUSTOMHID_OUTREPORT_BUF_SIZE];
+  volatile extern uint8_t config_flag;
+  volatile extern struct total_config_ config;
+  extern struct gamepad_report_ gamepad_report;
+  extern volatile uint8_t connected_mode;
 
 /* USER CODE END PRIVATE_VARIABLES */
 /**
@@ -261,161 +323,121 @@ static int8_t CUSTOM_HID_OutEvent_FS  (uint8_t event_idx, uint8_t state)
 	USBD_CUSTOM_HID_HandleTypeDef     *hhid = (USBD_CUSTOM_HID_HandleTypeDef*)hUsbDevice_0->pClassData;
 	uint8_t report_id=0;
 	uint8_t code=0;
-	uint8_t send_buffer[USBD_CUSTOMHID_OUTREPORT_BUF_SIZE]={0};
-//	uint8_t answer[USBD_CUSTOMHID_OUTREPORT_BUF_SIZE]={0};
-	uint8_t index=0;
-static	uint8_t packet1=0, packet2=0, packet3=0;
 
 	report_id = hhid->Report_buf[0];
 	code = hhid->Report_buf[1];
 
 	if (report_id == 3) {
+		config.packet_id1 = 4;
+		config.packet_id2 = 4;
+		config.packet_id3 = 4;
+		config.packet_id4 = 4;
+		config.packet_id5 = 4;
+		config.packet_id6 = 4;
+		config.packet_id7 = 4;
+		config.packet_id8 = 4;
+		config.packet_id9 = 4;
 		if (code == 1) {
-			send_buffer[0] = 4;
-			send_buffer[1] = 1;
-			for (uint8_t i=1;i<USEDPINS+1;i++){
-				send_buffer[i+1] = pins[i-1].pin_type;
-			}
-			index=USEDPINS+2;
-			for (uint8_t i=0;i<AXISES;i++) {
-				send_buffer[index++] = axises[i].calib_min_lowbyte;
-				send_buffer[index++] = axises[i].calib_min_hibyte;
-				send_buffer[index++] = axises[i].calib_max_lowbyte;
-				send_buffer[index++] = axises[i].calib_max_hibyte;
-				send_buffer[index++] = axises[i].special;
-			}
-			USBD_CUSTOM_HID_SendReport(hUsbDevice_0, send_buffer, USBD_CUSTOMHID_OUTREPORT_BUF_SIZE);
+			config_flag = 1;
+			memcpy(send_buffer, &(config.packet_id1), BUFFSIZE);
 		}
 		if (code == 2) {
-			send_buffer[0] = 4;
-			send_buffer[1] = 2;
-			send_buffer[2]=LOBYTE(Rot_Press_Time);
-			send_buffer[3]=HIBYTE(Rot_Press_Time);
-			send_buffer[4]=LOBYTE(Rot_Debounce_Time);
-			send_buffer[5]=HIBYTE(Rot_Debounce_Time);
-			send_buffer[6]=LOBYTE(Button_Debounce_Time);
-			send_buffer[7]=HIBYTE(Button_Debounce_Time);
-			send_buffer[8]=USB_polling_interval;
-			send_buffer[9]=LOBYTE(RotSwitch_Press_Time);
-			send_buffer[10]=HIBYTE(RotSwitch_Press_Time);
-
-			for (uint8_t i=0; i<10; i++) {
-				send_buffer[11+i]=USB_Product_String_Unique[i];
-			}
-			send_buffer[21]=AxisCombEnabled;
-			send_buffer[22]=LOBYTE(AxisCombPin1Min);
-			send_buffer[23]=HIBYTE(AxisCombPin1Min);
-			send_buffer[24]=LOBYTE(AxisCombPin1Max);
-			send_buffer[25]=HIBYTE(AxisCombPin1Max);
-			send_buffer[26]=LOBYTE(AxisCombPin2Min);
-			send_buffer[27]=HIBYTE(AxisCombPin2Min);
-			send_buffer[28]=LOBYTE(AxisCombPin2Max);
-			send_buffer[29]=HIBYTE(AxisCombPin2Max);
-			send_buffer[30]=0;
-			if (AxisCombSep) send_buffer[30]|=0x8;
-			if (AxisCombCoop) send_buffer[30]|=0x4;
-			if (AxisCombPin2AC) send_buffer[30]|=0x2;
-			if (AxisCombPin1AC) send_buffer[30]|=0x1;
-
-			send_buffer[31]=Number_Single_Rotaries;
-			for (uint8_t i=0; i<14; i++) {
-				send_buffer[32+(i*2)]=Single_rotaries[i].PINA;
-				send_buffer[33+(i*2)]=Single_rotaries[i].PINB;
-			}
-			send_buffer[60] = POV_config;
-			send_buffer[61] = AxisComb_Percent;
-			send_buffer[62] = AxisComb_pin1;
-			send_buffer[63] = AxisComb_pin2;
-			USBD_CUSTOM_HID_SendReport(hUsbDevice_0, send_buffer, USBD_CUSTOMHID_OUTREPORT_BUF_SIZE);
-
-			for (uint8_t i=0;i<USBD_CUSTOMHID_OUTREPORT_BUF_SIZE;i++) {
-				send_buffer[i]=0;
-			}
+			memcpy(send_buffer, &(config.packet_id2), BUFFSIZE);
 		}
 		if (code == 3) {
-			send_buffer[0] = 4;
-			send_buffer[1] = 3;
-			send_buffer[2] = LOBYTE(Analog2ButtonThreshold);
-			send_buffer[3] = HIBYTE(Analog2ButtonThreshold);
-			USBD_CUSTOM_HID_SendReport(hUsbDevice_0, send_buffer, USBD_CUSTOMHID_OUTREPORT_BUF_SIZE);
+			memcpy(send_buffer, &(config.packet_id3), BUFFSIZE);
+		}
+		if (code == 4) {
+			memcpy(send_buffer, &(config.packet_id4), BUFFSIZE);
+		}
+		if (code == 5) {
+			memcpy(send_buffer, &(config.packet_id5), BUFFSIZE);
+		}
+		if (code == 6) {
+			memcpy(send_buffer, &(config.packet_id6), BUFFSIZE);
+		}
+		if (code == 7) {
+			memcpy(send_buffer, &(config.packet_id7), BUFFSIZE);
+		}
+		if (code == 8) {
+			memcpy(send_buffer, &(config.packet_id8), BUFFSIZE);
+		}
+		if (code == 9) {
+			memcpy(send_buffer, &(config.packet_id9), BUFFSIZE);
 		}
 
-
+		if (code == 0xFF) config_flag=0;
 	}
 
+
 	if (report_id == 2) {
-		send_buffer[0]=4;
-		send_buffer[1]=255; //OK code
+		send_buffer[0]=5;
 		if (hhid->Report_buf[1] == 1){
-			packet1++;
-			for (uint8_t i=0;i<USEDPINS;i++) {
-				pins[i].pin_type = hhid->Report_buf[i+2];
-			}
-			for (uint8_t i=0;i<AXISES;i++) {
-				axises[i].calib_min_lowbyte = hhid->Report_buf[USEDPINS+2+i*5];
-				axises[i].calib_min_hibyte = hhid->Report_buf[USEDPINS+3+i*5];
-				axises[i].calib_max_lowbyte = hhid->Report_buf[USEDPINS+4+i*5];
-				axises[i].calib_max_hibyte = hhid->Report_buf[USEDPINS+5+i*5];
-				axises[i].special = hhid->Report_buf[USEDPINS+6+i*5];
-			}
-		//	USBD_CUSTOM_HID_SendReport(hUsbDevice_0, send_buffer, USBD_CUSTOMHID_OUTREPORT_BUF_SIZE);
-		//	POV_config = hhid->Report_buf[63];
+			send_buffer[1]=1;
+			config_flag = 1;
+			memcpy(&(config.packet_id1), hhid->Report_buf, BUFFSIZE);
 		}
 		if (hhid->Report_buf[1] == 2) {
-			packet2++;
-			Rot_Press_Time=(hhid->Report_buf[3]<<8)+hhid->Report_buf[2];
-			Rot_Debounce_Time=(hhid->Report_buf[5]<<8)+hhid->Report_buf[4] ;
-			Button_Debounce_Time=(hhid->Report_buf[7]<<8)+hhid->Report_buf[6];
-//			Button_Press_time=(hhid->Report_buf[8]<<8)+hhid->Report_buf[7];
-			USB_polling_interval=hhid->Report_buf[8];
-			RotSwitch_Press_Time=(hhid->Report_buf[10]<<8)+hhid->Report_buf[9];
-
-			for (uint8_t i=0; i<10; i++) {
-				USB_Product_String_Unique[i]=hhid->Report_buf[11+i];
-			}
-
-
-		        AxisCombEnabled=hhid->Report_buf[21];
-		        AxisCombPin1Min=(hhid->Report_buf[23]<<8)+hhid->Report_buf[22];
-		        AxisCombPin1Max=(hhid->Report_buf[25]<<8)+hhid->Report_buf[24];
-		        AxisCombPin2Min=(hhid->Report_buf[27]<<8)+hhid->Report_buf[26];
-		        AxisCombPin2Max=(hhid->Report_buf[29]<<8)+hhid->Report_buf[28];
-		        AxisCombPin1AC=hhid->Report_buf[30]&0b0001;
-		        AxisCombPin2AC=(hhid->Report_buf[30]&0b0010)>>1;
-		        AxisCombCoop=(hhid->Report_buf[30]&0b0100)>>2;
-		        AxisCombSep=(hhid->Report_buf[30]&0b1000)>>3;
-
-//			for (uint8_t i=0; i<10; i++) {
-//				USB_Serial_Number_Unique[i+2]=hhid->Report_buf[21+i];
-//			}
-
-			Number_Single_Rotaries=hhid->Report_buf[31];
-			for (uint8_t i=0; i<14; i++) {
-				Single_rotaries[i].PINA=hhid->Report_buf[32+(i*2)];
-				Single_rotaries[i].PINB=hhid->Report_buf[33+(i*2)];
-			}
-			POV_config = hhid->Report_buf[60];
-			AxisComb_Percent = hhid->Report_buf[61];
-			AxisComb_pin1 = hhid->Report_buf[62];
-			AxisComb_pin2 = hhid->Report_buf[63];
-
-		//	USBD_CUSTOM_HID_SendReport(hUsbDevice_0, send_buffer, USBD_CUSTOMHID_OUTREPORT_BUF_SIZE);
+			send_buffer[1]=2;
+			memcpy(&(config.packet_id2), hhid->Report_buf, BUFFSIZE);
 		}
-
 		if (hhid->Report_buf[1] == 3) {
-			packet3++;
-			Analog2ButtonThreshold = (hhid->Report_buf[3]<<8)+hhid->Report_buf[2];
+			send_buffer[1]=3;
+			memcpy(&(config.packet_id3), hhid->Report_buf, BUFFSIZE);
 		}
-
-
-		if ((packet1) && (packet2) && (packet3)) {
-			packet1=0; packet2=0; packet3=0;
+		if (hhid->Report_buf[1] == 4) {
+			send_buffer[1]=4;
+			memcpy(&(config.packet_id4), hhid->Report_buf, BUFFSIZE);
+		}
+		if (hhid->Report_buf[1] == 5) {
+			send_buffer[1]=5;
+			memcpy(&(config.packet_id5), hhid->Report_buf, BUFFSIZE);
+		}
+		if (hhid->Report_buf[1] == 6) {
+			send_buffer[1]=6;
+			memcpy(&(config.packet_id6), hhid->Report_buf, BUFFSIZE);
+		}
+		if (hhid->Report_buf[1] == 7) {
+			send_buffer[1]=7;
+			memcpy(&(config.packet_id7), hhid->Report_buf, BUFFSIZE);
+		}
+		if (hhid->Report_buf[1] == 8) {
+			send_buffer[1]=8;
+			memcpy(&(config.packet_id8), hhid->Report_buf, BUFFSIZE);
+		}
+		if (hhid->Report_buf[1] == 9) {
+			send_buffer[1]=9;
+			memcpy(&(config.packet_id9), hhid->Report_buf, BUFFSIZE);
 			erase_flash();
 			write_flash();
-			NVIC_SystemReset();
 		}
-	//	get_config();
-	//	gpio_ports_config();
+		if (hhid->Report_buf[1] == 255) {
+			config_flag = 0;
+
+			gamepad_report.buttons = 0;
+			gamepad_report.axis[0] = 0;
+			gamepad_report.axis[1] = 0;
+			gamepad_report.axis[2] = 0;
+			gamepad_report.axis[3] = 0;
+			gamepad_report.axis[4] = 0;
+			gamepad_report.axis[5] = 0;
+			gamepad_report.pov[0] = 8;
+			gamepad_report.pov[1] = 8;
+			gamepad_report.pov[2] = 8;
+			gamepad_report.pov[3] = 8;
+			USBD_CUSTOM_HID_SendReport(hUsbDevice_0, &(gamepad_report.packet_id), sizeof(struct gamepad_report_));
+			//periph_deinit();
+			//sysclock_init();
+			//gpio_init();
+			gpio_ports_config();
+			//HAL_Delay(100);
+			//__disable_irq();
+			//NVIC_SystemReset();
+			//__enable_irq();
+		}
+		if (hhid->Report_buf[1] == 254) {
+			connected_mode = 1;
+		}
 	}
 
 

@@ -6,16 +6,9 @@
 #include <QThread>
 #include<QFileDialog>
 #include<QTextStream>
-
-#define OSHSTUDIOVERSION 14
-
-//Input/output usb packet
-#define BUFFSIZE 64
-#define PINS 32
-#define AXISES 6
-
-#define LOBYTE(x)  ((uint8_t)(x & 0x00FF))
-#define HIBYTE(x)  ((uint8_t)((x & 0xFF00) >>8))
+#include "osha2bw.h"
+#include "..\common_types\common_structs.h"
+#include "oshbuttonw.h"
 
 namespace Ui {
 class OSHStudio;
@@ -25,8 +18,17 @@ class OSHStudio;
 struct single_encoders_pins {
     uint8_t pinA;
     uint8_t pinB;
-    uint8_t pinA_type;
-    uint8_t pinB_type;
+};
+
+struct A2B_params {
+    osha2bw * widget_ptr;
+    uint8_t number_buttons;
+    uint8_t pin_number;
+};
+
+struct SB_params {
+    oshbuttonw * SB_wid_prt;
+    button_mode button_type;
 };
 
 struct pin_comp_geometry {
@@ -49,99 +51,68 @@ public:
 
 private:
   Ui::OSHStudio *ui;
-  hid_device *handle_device;
-
-  const QString pin_names[PINS] = {
-   {"A0"},
-   {"A1"},
-   {"A2"},
-   {"A3"},
-   {"A4"},
-   {"A5"},
-   {"A6"},
-   {"A7"},
-   {"A8"},
-   {"A9"},
-   {"A10"},
-   {"A11"},
-   {"A12"},
-   {"A15"},
-   {"B0"},
-   {"B1"},
-   {"B3"},
-   {"B4"},
-   {"B5"},
-   {"B6"},
-   {"B7"},
-   {"B8"},
-   {"B9"},
-   {"B10"},
-   {"B11"},
-   {"B12"},
-   {"B13"},
-   {"B14"},
-   {"B15"},
-   {"C13"},
-   {"C14"},
-   {"C15"},
-  };
-
-
-  typedef enum {
-      Not_Used = 0,
-      AnalogNoSmooth = 1,
-      AnalogLowSmooth = 2,
-      AnalogMedSmooth = 3,
-      AnalogHighSmooth = 4,
-      Analog2Button = 5,
-      Chain_Rotary_PINA = 6,
-      Chain_Rotary_PINB = 7,
-      Chain_Rotary_Enc_1 = 8,
-      Chain_Rotary_Enc_2 = 9,
-      Chain_Rotary_Enc_4 = 10,
-      Single_Rotary_PINA_1 = 11,
-      Single_Rotary_PINB_1 = 12,
-      Single_Rotary_PINA_2 = 13,
-      Single_Rotary_PINB_2 = 14,
-      Single_Rotary_PINA_4 = 15,
-      Single_Rotary_PINB_4 = 16,
-      Button_ROW = 17,
-      Button_COLUMN = 18,
-      Button = 19,
-      Button_GND = 20,
-      RotSwPole = 21,
-      RotSwWire = 22,
-} pintype;
-
-
+//  hid_device *handle_device;
+  struct total_config_ config;
+  struct single_encoders_pins single_encoders_1_store[MAX_SINGLE_ENCODERS];
+  struct single_encoders_pins single_encoders_2_store[MAX_SINGLE_ENCODERS];
+  struct single_encoders_pins single_encoders_4_store[MAX_SINGLE_ENCODERS];
+  struct A2B_params A2Bstore[MAX_A2B_INPUTS];
+  struct SB_params SBstore[MAX_BUTTONS];
+  uint8_t single_encoders_1;
+  uint8_t single_encoders_2;
+  uint8_t single_encoders_4;
+  QStringList PINAlist, PINBlist;
+  uint8_t NumberAnalogInputs;
+  uint8_t Chain_PinA;
+  uint8_t Chain_PinB;
+  uint8_t Chain_Rotaries_1;
+  uint8_t Chain_Rotaries_2;
+  uint8_t Chain_Rotaries_4;
+  uint8_t Single_Rotaries_PINA_1;
+  uint8_t Single_Rotaries_PINB_1;
+  uint8_t Single_Rotaries_PINA_2;
+  uint8_t Single_Rotaries_PINB_2;
+  uint8_t Single_Rotaries_PINA_4;
+  uint8_t Single_Rotaries_PINB_4;
+  uint8_t ButtonsRows;
+  uint8_t ButtonsColumns;
+  uint8_t Buttons;
+  uint8_t A2BButtons = 0;
+  uint16_t TotalButtons;
+  uint8_t RotSwitchPoles;
+  uint8_t RotSwitchWires;
+  uint8_t Analog2Buttons_inputs;
+  uint8_t pov1;
+  uint8_t pov2;
+  uint8_t pov3;
+  uint8_t pov4;
+  uint16_t axes_shapes[MAX_AXES][SHAPEVALUES];
+  bool config_mode;
 
 private slots:
+  void drawHelpSB(void);
+  void setShapesW(void);
+  void get_all_A2B_buttons(void);
+  void get_all_SB_buttons(void);
+  void populateDefSB(void);
   void getConfig_Slot();
+  void gatherConfig_Slot();
+  void getACKpacket(uint8_t *);
+  void getConfigPacket(uint8_t *);
   void writeConfig_Slot();
   void resetConfig_Slot();
-  void setConfig_Slot(uint8_t buff[BUFFSIZE], uint8_t);
+  void setConfig_Slot();
   void restoreConfig_Slot();
-  void send_write_packet(uint8_t buf[BUFFSIZE]);
+  void resetConfigValues(void);
   void show_USB_ident_uniq(QString ident);
   void show_USB_exch_rate(int interval);
-  void comboBoxSEManualConfig();
   void showBoardType(int boardtype);
-  uint8_t convertCharToSEType (QChar ch);
   uint8_t convertPinnameToIndex (QString pname);
   void drawHelpSE();
-  void drawAxis1Value(uint16_t axis_value);
-  void drawAxis2Value(uint16_t axis_value);
-  void drawAxis3Value(uint16_t axis_value);
-  void drawAxis4Value(uint16_t axis_value);
-  void drawAxis5Value(uint16_t axis_value);
-  void drawAxis6Value(uint16_t axis_value);
-  void drawButtons1Value(uint64_t buttons_value);
-  void drawButtons2Value(uint64_t buttons_value);
-  void drawPOVSvalue(uint64_t POVS_value);
-  void showConnectDeviceInfo(uint8_t firmware_release);
+  void profile_name_changed(QString);
+  void getGamepadPacket(uint8_t *);
+  void showConnectDeviceInfo();
   void hideConnectDeviceInfo();
-  QString convertIntToString(int i);
-  int convertStringToInt(QString str);
   void showPercentAxisComb(int i);
   void showPin1AxisComb(QString pinname);
   void showPin2AxisComb(QString pinname);
@@ -150,37 +121,17 @@ private slots:
   void loadFromFile();
   void saveToFile();
   void drawHelp();
-  void gatherAllConf();
+  void gatherPinsConf();
+  void pinConfChanged();
+  void populateDefSE();
+  void populateDefA2B();
+  void showA2Btab();
+  void resetAllA2B();
   void showSingleEncodersTab(void);
-  void checkBoxPOV1Changed(int state);
-  void checkBoxPOV2Changed(int state);
-  void checkBoxPOV3Changed(int state);
-  void checkBoxPOV4Changed(int state);
-};
-
-class Worker : public QObject {
-      Q_OBJECT
-
-public slots:
-    void processData(void);
-
-signals:
-    void putAxis1Value(uint16_t axis_value);
-    void putAxis2Value(uint16_t axis_value);
-    void putAxis3Value(uint16_t axis_value);
-    void putAxis4Value(uint16_t axis_value);
-    void putAxis5Value(uint16_t axis_value);
-    void putAxis6Value(uint16_t axis_value);
-    void putButtons1Value(uint64_t buttons_value);
-    void putButtons2Value(uint64_t buttons_value);
-    void putPOVSvalue(uint64_t buttons_value);
-    void putDisconnectedDeviceInfo(void);
-    void putConnectedDeviceInfo(uint8_t firmware_release);
-
-private:
-    uint16_t adc_value=0;
-    uint8_t channel=0;
-
+  void current_profile_changed(int current_profile);
+  void update_ro_shapes(void);
+  void setSensorsValue(uint8_t *buffer);
+  void write_config_packet(void);
 };
 
 #endif // OSHSTUDIO_H

@@ -1,95 +1,10 @@
 #include "oshstudio.h"
 #include "ui_oshstudio.h"
+#include "worker.h"
 #include<QTextEdit>
 #include<QMessageBox>
 
-
-
-hid_device *handle_read, *handle_write;
-
-uint8_t NumberAnalogInputs,
-        Chain_PinA,
-        Chain_PinB,
-        Chain_Rotaries_1,
-        Chain_Rotaries_2,
-        Chain_Rotaries_4,
-        Single_Rotaries_PINA_1,
-        Single_Rotaries_PINB_1,
-        Single_Rotaries_PINA_2,
-        Single_Rotaries_PINB_2,
-        Single_Rotaries_PINA_4,
-        Single_Rotaries_PINB_4,
-        ButtonsRows,
-        ButtonsColumns,
-        Buttons,
-        RotSwitchPoles,
-        RotSwitchWires;
-uint8_t Total_Single_encoders=0;
-uint8_t AxisComb_StartPin=0,
-        AxisComb_EndPin=0,
-        AxisComb_Percent=0;
-struct single_encoders_pins single_encoders_store[14] = {0,0,0,0};
-
-
-QStringList PINAlist, PINBlist;
-
-void Worker::processData(void) {
-    uint8_t buf[BUFFSIZE]={0};
-    struct hid_device_info *cur_dev;
-    int8_t res=0;
-    uint64_t buttonsState=0;
-
-
-while (1) {
-     if (!handle_read) {
-      handle_read = hid_open(0x1209, 0x3100,NULL);
-      if (!handle_read) {
-          emit putAxis1Value(0);
-          emit putAxis2Value(0);
-          emit putAxis3Value(0);
-          emit putAxis4Value(0);
-          emit putAxis5Value(0);
-          emit putAxis6Value(0);
-          emit putButtons1Value(0);
-          emit putButtons2Value(0);
-          emit putPOVSvalue(0x08080808);
-          emit putDisconnectedDeviceInfo();
-          QThread::sleep(1);
-      } else {
-        res=hid_set_nonblocking(handle_read, 1);
-
-      //  cur_dev = hid_enumerate(0x1209, 0x3100);
-        emit putConnectedDeviceInfo(14);
-        }
-     }
-
-     if (handle_read) {
-          //  res=hid_read_timeout(handle_read, buf, BUFFSIZE,500);
-          res=hid_read(handle_read, buf, BUFFSIZE);
-            if (res < 0) {
-                hid_close(handle_read);
-                handle_read=0;
-             } else {
-                if (buf[0] == 1) {
-                    emit putAxis1Value(buf[10]*0x100+buf[9]);
-                    emit putAxis2Value(buf[12]*0x100+buf[11]);
-                    emit putAxis3Value(buf[14]*0x100+buf[13]);
-                    emit putAxis4Value(buf[16]*0x100+buf[15]);
-                    emit putAxis5Value(buf[18]*0x100+buf[17]);
-                    emit putAxis6Value(buf[20]*0x100+buf[19]);
-                    buttonsState=(buf[4]<<24)+(buf[3]<<16)+(buf[2]<<8)+buf[1];
-                    emit putButtons1Value(buttonsState);
-                    buttonsState=(buf[8]<<24)+(buf[7]<<16)+(buf[6]<<8)+buf[5];
-                    emit putButtons2Value(buttonsState);
-                    buttonsState=(buf[24]<<24)+(buf[23]<<16)+(buf[22]<<8)+buf[21];
-                    emit putPOVSvalue(buttonsState);
-                    QThread::msleep(10);
-                }
-            }
-      }
-    }
-}
-
+hid_device *handle_read;
 
 OSHStudio::OSHStudio(QWidget *parent) :
     QMainWindow(parent),
@@ -97,8 +12,7 @@ OSHStudio::OSHStudio(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->label_Stud_version->setText("0." + QString::number(OSHSTUDIOVERSION));
-
-
+    config_mode = false;
 
     connect (ui->comboBox_BoardType, SIGNAL(currentIndexChanged(int)), SLOT(showBoardType(int)));
 
@@ -107,7 +21,7 @@ OSHStudio::OSHStudio(QWidget *parent) :
       connect(ui->resetConfig_button, SIGNAL(clicked()), SLOT(resetConfig_Slot()));
       connect(ui->restoreConfig_button, SIGNAL(clicked()), SLOT(restoreConfig_Slot()));
 
-      connect(ui->lineEdit_Device_ident, SIGNAL(textEdited(QString)), SLOT(show_USB_ident_uniq(QString)));
+      connect(ui->lineEdit_Device_ident, SIGNAL(textChanged(QString)), SLOT(show_USB_ident_uniq(QString)));
       connect(ui->spinBox_USB_exchange, SIGNAL(valueChanged(int)), SLOT(show_USB_exch_rate(int)));
 
       connect(ui->horizontalSliderAxisComb, SIGNAL(valueChanged(int)), SLOT(showPercentAxisComb(int)));
@@ -119,108 +33,99 @@ OSHStudio::OSHStudio(QWidget *parent) :
       connect(ui->loadFile_Button, SIGNAL(clicked(bool)), SLOT(loadFromFile()));
       connect(ui->saveFile_Button, SIGNAL(clicked(bool)), SLOT(saveToFile()));
 
-      connect(ui->checkBox_POV1, SIGNAL(stateChanged(int)), SLOT(checkBoxPOV1Changed(int)));
-      connect(ui->checkBox_POV2, SIGNAL(stateChanged(int)), SLOT(checkBoxPOV2Changed(int)));
-      connect(ui->checkBox_POV3, SIGNAL(stateChanged(int)), SLOT(checkBoxPOV3Changed(int)));
-      connect(ui->checkBox_POV4, SIGNAL(stateChanged(int)), SLOT(checkBoxPOV4Changed(int)));
-
-
-      connect(ui->comboBox_SEA1, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB1, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA2, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB2, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA3, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB3, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA4, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB4, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA5, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB5, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA6, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB6, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA7, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB7, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA8, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB8, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA9, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB9, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA10, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB10, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA11, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB11, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA12, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB12, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA13, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB13, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEA14, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-      connect(ui->comboBox_SEB14, SIGNAL(activated(int)),  SLOT(comboBoxSEManualConfig()));
-
-
 
       qRegisterMetaType<uint16_t>("uint16_t");
+      qRegisterMetaType<uint16_t>("uint16_t *");
       qRegisterMetaType<uint64_t>("uint64_t");
       qRegisterMetaType<uint16_t>("uint8_t");
+      qRegisterMetaType<uint16_t>("uint8_t *");
 
 
 
       QThread* thread = new QThread;
       Worker* worker = new Worker();
       worker->moveToThread(thread);
+      QThread* thread2 = new QThread;
+      Worker* worker2 = new Worker();
+      worker2->moveToThread(thread2);
+      QThread* thread3 = new QThread;
+      Worker* worker3 = new Worker();
+      worker3->moveToThread(thread3);
+
+
 
       connect(thread, SIGNAL(started()), worker, SLOT(processData()));
-      connect(worker, SIGNAL(putAxis1Value(uint16_t)),
-                            SLOT(drawAxis1Value(uint16_t)));
-      connect(worker, SIGNAL(putAxis2Value(uint16_t)),
-                            SLOT(drawAxis2Value(uint16_t)));
-      connect(worker, SIGNAL(putAxis3Value(uint16_t)),
-                            SLOT(drawAxis3Value(uint16_t)));
-      connect(worker, SIGNAL(putAxis4Value(uint16_t)),
-                            SLOT(drawAxis4Value(uint16_t)));
-      connect(worker, SIGNAL(putAxis5Value(uint16_t)),
-                            SLOT(drawAxis5Value(uint16_t)));
-      connect(worker, SIGNAL(putAxis6Value(uint16_t)),
-                            SLOT(drawAxis6Value(uint16_t)));
-      connect(worker, SIGNAL(putButtons1Value(uint64_t)),
-                            SLOT(drawButtons1Value(uint64_t)));
-      connect(worker, SIGNAL(putButtons2Value(uint64_t)),
-                            SLOT(drawButtons2Value(uint64_t)));
-      connect(worker, SIGNAL(putPOVSvalue(uint64_t)),
-                            SLOT(drawPOVSvalue(uint64_t)));
-      connect(worker, SIGNAL(putConnectedDeviceInfo(uint8_t)),
-                            SLOT(showConnectDeviceInfo(uint8_t)));
+      connect(thread2, SIGNAL(started()), worker2, SLOT(processCHIDData()));
+      connect(thread3, SIGNAL(started()), worker3, SLOT(processSensorData()));
+
+      connect(worker, SIGNAL(putGamepadPacket(uint8_t *)),
+                            SLOT(getGamepadPacket(uint8_t *)));
+      connect(worker, SIGNAL(putConnectedDeviceInfo()),
+                            SLOT(showConnectDeviceInfo()));
       connect(worker, SIGNAL(putDisconnectedDeviceInfo()),
                             SLOT(hideConnectDeviceInfo()));
-
+      connect(worker2, SIGNAL(putConfigPacket(uint8_t *)),
+                            SLOT(getConfigPacket(uint8_t *)));
+      connect(worker2, SIGNAL(putACKpacket(uint8_t *)),
+                            SLOT(getACKpacket(uint8_t *)));
+      connect(worker3, SIGNAL(putSensorPacket(uint8_t *)),
+                            SLOT(setSensorsValue(uint8_t *)));
+      connect(worker, SIGNAL(putHBPacket()),
+                            SLOT(write_config_packet()));
 
       thread->start();
+      thread2->start();
+      thread3->start();
 
       //hide all single encoders config for now
-      QString name_template_Pix("label_SE%1");
-      QString name_template_CBBA("comboBox_SEA%1");
-      QString name_template_CBBB("comboBox_SEB%1");
-      QString name_template_Pow("label_SE%1_CPin");
-       for(int i =1; i < 15; i++)
-      {
-          QLabel *SEpic_Label = ui->tabWidget->findChild<QLabel *>(name_template_Pix.arg(i));
-          QLabel *SEpow_Label = ui->tabWidget->findChild<QLabel *>(name_template_Pow.arg(i));
-          QComboBox *SEcbba = ui->tabWidget->findChild<QComboBox *>(name_template_CBBA.arg(i));
-          QComboBox *SEcbbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBB.arg(i));
-          SEpic_Label->setVisible(false);
-          SEpow_Label->setVisible(false);
-          SEcbba->setVisible(false);
-          SEcbbb->setVisible(false);
-        }
-       ui->label_ZeroSglEncoders->setVisible(false);
+      QString name_template_SE("widget_SE%1");
+      for(uint8_t i =1; i <= MAX_SINGLE_ENCODERS; i++){
+          oshsingenc *SEwid = ui->tabWidget->findChild<oshsingenc *>(name_template_SE.arg(i));
+          SEwid->setVisible(false);
+          connect(SEwid, SIGNAL(item_changed()),  SLOT(drawHelpSE()));
+       }
+       ui->label_ZeroSglEncoders->setVisible(true);
 
+       //hide all A2B widgets
+       QString name_template_A2B("widget_A2B_%1");
+       for(uint8_t i =1; i <= MAX_A2B_INPUTS; i++){
+           A2Bstore[i-1].widget_ptr = ui->tabWidget->findChild<osha2bw *>(name_template_A2B.arg(i));
+           A2Bstore[i-1].widget_ptr->setVisible(false);
+           A2Bstore[i-1].number_buttons=1;
+           connect(A2Bstore[i-1].widget_ptr, SIGNAL(buttons_number_changed()), SLOT(get_all_A2B_buttons()));
+        }
+        ui->label_ZeroA2B->setVisible(true);
+        resetAllA2B();
+
+        //hide all buttons
+        QString name_template_SB("widget_SB_%1");
+        for(uint8_t i =1; i <= MAX_BUTTONS; i++){
+            SBstore[i-1].SB_wid_prt = ui->tabWidget->findChild<oshbuttonw *>(name_template_SB.arg(i));
+            SBstore[i-1].SB_wid_prt -> setVisible(false);
+            SBstore[i-1].SB_wid_prt->set_button_type(joystick_button);
+            SBstore[i-1].button_type = joystick_button;
+            connect(SBstore[i-1].SB_wid_prt, SIGNAL(button_type_changed()), SLOT(get_all_SB_buttons()));
+         }
 
        QString name_template("widget_PB%1");
-       for(int i = 0; i < 32; i++) {
+       for(uint8_t i = 0; i < 32; i++) {
           oshpincombobox *pinComboBox = ui->tabWidget->findChild<oshpincombobox *>(name_template.arg(i));
           pinComboBox->set_pin_number(i);
-          connect(pinComboBox, SIGNAL(item_changed()),  SLOT(drawHelp()));
+          connect(pinComboBox, SIGNAL(item_changed()),  SLOT(pinConfChanged()));
        }
        ui->widget_PB11->setEnabled(false);
        ui->widget_PB12->setEnabled(false);
 
+       ui->widget_AS_1->setReadOnlyMode(true);
+       ui->widget_AS_2->setReadOnlyMode(true);
+       ui->widget_AS_3->setReadOnlyMode(true);
+       ui->widget_AS_4->setReadOnlyMode(true);
+       ui->widget_AS_5->setReadOnlyMode(true);
+       ui->widget_AS_6->setReadOnlyMode(true);
+//       current_shape_profile = 0;
+       connect(ui->comboBox_curr_shape_prof,SIGNAL(editTextChanged(QString)), SLOT(profile_name_changed(QString)));
+       connect(ui->comboBox_curr_shape_prof,SIGNAL(currentIndexChanged(int)),SLOT(current_profile_changed(int)));
+       connect(ui->widget_AS_big,SIGNAL(knob_moved()), SLOT(update_ro_shapes()));
 
       // fake assignment for making slots active;
       ui->spinBox_USB_exchange->setValue(2);
@@ -233,6 +138,8 @@ OSHStudio::OSHStudio(QWidget *parent) :
       ui->comboBox_BoardType->addItem("BluePill Board");
       ui->comboBox_BoardType->addItem("BlackPill Board");
       ui->comboBox_BoardType->setCurrentIndex(0);
+
+      resetConfig_Slot();
 }
 
 OSHStudio::~OSHStudio()
@@ -252,36 +159,28 @@ void OSHStudio::show_USB_ident_uniq(QString ident) {
 
 void OSHStudio::show_USB_exch_rate(int interval) {
     QString const_desc="USB polling interval, ms. Current value means USB exchange frequency of ";
-    interval=(int)1000/interval;
+    interval=1000/interval;
     ui->label_59->setText(const_desc + QString::number(interval) + " Hz");
 }
 
-void OSHStudio::drawAxis1Value(uint16_t axis_value) {
-    ui->widget_axis1->setAxisValue(axis_value);
-}
+void OSHStudio::getGamepadPacket(uint8_t * buff){
+    struct gamepad_report_ gamepad_report;
+    memcpy(&(gamepad_report.packet_id), buff, sizeof(struct gamepad_report_));
 
-void OSHStudio::drawAxis2Value(uint16_t axis_value) {
-    ui->widget_axis2->setAxisValue(axis_value);
-}
+    ui->widget_axis1->setAxisValue(gamepad_report.axis[0]);
+    ui->widget_axis2->setAxisValue(gamepad_report.axis[1]);
+    ui->widget_axis3->setAxisValue(gamepad_report.axis[2]);
+    ui->widget_axis4->setAxisValue(gamepad_report.axis[3]);
+    ui->widget_axis5->setAxisValue(gamepad_report.axis[4]);
+    ui->widget_axis6->setAxisValue(gamepad_report.axis[5]);
 
-void OSHStudio::drawAxis3Value(uint16_t axis_value) {
-    ui->widget_axis3->setAxisValue(axis_value);
-}
+    for(int i = 0; i < MAX_BUTTONS; i++)
+    {
+        if ((SBstore[i].button_type == joystick_button) && (gamepad_report.buttons & (0x1ULL<<i)))
+                SBstore[i].SB_wid_prt->set_button_state(true);
+        else SBstore[i].SB_wid_prt->set_button_state(false);
+    }
 
-void OSHStudio::drawAxis4Value(uint16_t axis_value) {
-    ui->widget_axis4->setAxisValue(axis_value);
-}
-
-void OSHStudio::drawAxis5Value(uint16_t axis_value) {
-    ui->widget_axis5->setAxisValue(axis_value);
-}
-
-void OSHStudio::drawAxis6Value(uint16_t axis_value) {
-    ui->widget_axis6->setAxisValue(axis_value);
-}
-
-void OSHStudio::drawPOVSvalue(uint64_t POVS_value) {
-    uint8_t value;
     QString name_template("label_POV%1");
     QPixmap povTop (":/Images/dpad_ct.png");
     QPixmap povRight (":/Images/dpad_cr.png");
@@ -292,12 +191,9 @@ void OSHStudio::drawPOVSvalue(uint64_t POVS_value) {
     QPixmap povBottomLeft (":/Images/dpad_cbl.png");
     QPixmap povLeftTop (":/Images/dpad_clt.png");
     QPixmap povNull (":/Images/dpad.png");
-
-
-    for (int i=0; i<4; i++) {
+    for (int i=0; i<MAX_POVS; i++) {
         QLabel *povLabel = ui->tabWidget->findChild<QLabel *>(name_template.arg(i+1));
-        value=0xFF & (POVS_value >> (i*8));
-        switch (value) {
+        switch (gamepad_report.pov[i]) {
             case 0: povLabel->setPixmap(povTop); break;
             case 1: povLabel->setPixmap(povTopRight); break;
             case 2: povLabel->setPixmap(povRight); break;
@@ -309,110 +205,14 @@ void OSHStudio::drawPOVSvalue(uint64_t POVS_value) {
             default: povLabel->setPixmap(povNull);
         }
     }
+
 }
 
-void OSHStudio::drawButtons2Value(uint64_t buttons_value) {
-    QPixmap buttOn (":/Images/ON_2.png");
-    QPixmap buttOff (":/Images/OFF.png");
-
-    QString name_template("labelButt_%1");
-
-
-    for(int i =32; i < 64; i++)
-    {
-        QLabel *buttLabel = ui->tabWidget->findChild<QLabel *>(name_template.arg(i));
-        if (buttons_value & (0x1<<(i-32))) {
-            buttLabel->setPixmap(buttOn);
-        } else buttLabel->setPixmap(buttOff);
-
-    }
-}
-
-void OSHStudio::drawButtons1Value(uint64_t buttons_value) {
-    QPixmap buttOn (":/Images/ON_2.png");
-    QPixmap buttOff (":/Images/OFF.png");
-
-    QString name_template("labelButt_%1");
-
-
-    for(int i = 0; i < 32; i++)
-    {
-        QLabel *buttLabel = ui->tabWidget->findChild<QLabel *>(name_template.arg(i));
-        if (buttons_value & (0x1<<i)) {
-            buttLabel->setPixmap(buttOn);
-        } else buttLabel->setPixmap(buttOff);
-    }
-}
-
-void OSHStudio::checkBoxPOV1Changed(int state) {
-    bool chk;
-
-    if (state) chk=true; else chk=false;
-
-    ui->label_POV1->setEnabled(chk);
-    ui->labelButt_0->setEnabled(!chk);
-    ui->labelButt_1->setEnabled(!chk);
-    ui->labelButt_2->setEnabled(!chk);
-    ui->labelButt_3->setEnabled(!chk);
-}
-
-void OSHStudio::checkBoxPOV2Changed(int state) {
-    bool chk;
-
-    if (state) chk=true; else chk=false;
-
-    ui->label_POV2->setEnabled(chk);
-    ui->labelButt_4->setEnabled(!chk);
-    ui->labelButt_5->setEnabled(!chk);
-    ui->labelButt_6->setEnabled(!chk);
-    ui->labelButt_7->setEnabled(!chk);
-}
-
-void OSHStudio::checkBoxPOV3Changed(int state) {
-    bool chk;
-
-    if (state) chk=true; else chk=false;
-
-    ui->label_POV3->setEnabled(chk);
-    ui->labelButt_8->setEnabled(!chk);
-    ui->labelButt_9->setEnabled(!chk);
-    ui->labelButt_10->setEnabled(!chk);
-    ui->labelButt_11->setEnabled(!chk);
-}
-
-void OSHStudio::checkBoxPOV4Changed(int state) {
-    bool chk;
-
-    if (state) chk=true; else chk=false;
-
-    ui->label_POV4->setEnabled(chk);
-    ui->labelButt_12->setEnabled(!chk);
-    ui->labelButt_13->setEnabled(!chk);
-    ui->labelButt_14->setEnabled(!chk);
-    ui->labelButt_15->setEnabled(!chk);
-}
-
-
-
-
-void OSHStudio::showConnectDeviceInfo(uint8_t firmware_release) {
-    QString firmware_correctness="";
-
+void OSHStudio::showConnectDeviceInfo() {
     ui->label_DevDescImg->setVisible(true);
     ui->label_DevDesc->setVisible(true);
     ui->getConfig_button->setEnabled(true);
     ui->saveConfig_Button->setEnabled(true);
-    if (!firmware_release) ui->label_Firmware_Vers->setText("") ;
-            else ui->label_Firmware_Vers->setText("0."+QString::number(firmware_release));
-    if (firmware_release == OSHSTUDIOVERSION) {
-        firmware_correctness="color : green";
-    } else {
-        firmware_correctness="color : red";
-        }
-        ui->label_Firmware_Vers->setStyleSheet(firmware_correctness);
-        ui->label_58->setStyleSheet(firmware_correctness);
-        ui->label_34->setStyleSheet(firmware_correctness);
-        ui->label_Stud_version->setStyleSheet(firmware_correctness);
 }
 
 void OSHStudio::hideConnectDeviceInfo() {
@@ -425,10 +225,6 @@ void OSHStudio::hideConnectDeviceInfo() {
     ui->label_58->setStyleSheet("color : black");
     ui->label_34->setStyleSheet("color : black");
     ui->label_Stud_version->setStyleSheet("color : black");
-}
-
-QString OSHStudio::convertIntToString(int i) {
-    return QString::number(i);
 }
 
 void OSHStudio::showPercentAxisComb(int i) {
@@ -469,22 +265,17 @@ void OSHStudio::showAxisCombSection(bool checked) {
 
 void OSHStudio::showPin1AxisComb(QString pinname){
     ui->label_AxisCombPin1->setText(pinname);
-    AxisComb_StartPin=convertPinnameToIndex(pinname);
+    config.combined_axis_pin1=convertPinnameToIndex(pinname);
 }
 
 void OSHStudio::showPin2AxisComb(QString pinname){
     ui->label_AxisCombPin2->setText(pinname);
-    AxisComb_EndPin=convertPinnameToIndex(pinname);
+    config.combined_axis_pin2=convertPinnameToIndex(pinname);
 }
 
-int OSHStudio::convertStringToInt(QString str) {
-    return str.toInt();
-}
-
-
-
-void OSHStudio::gatherAllConf()
+void OSHStudio::gatherPinsConf()
 {
+    //TODO - eliminate these ugly globals
     NumberAnalogInputs=0;
     Chain_PinA=0;
     Chain_PinB=0;
@@ -504,13 +295,11 @@ void OSHStudio::gatherAllConf()
     RotSwitchWires=0;
     PINAlist.clear();
     PINBlist.clear();
-    Total_Single_encoders=0;
     QStringList AxisComb1;
+    Analog2Buttons_inputs = 0;
 
 
     uint8_t pin_number=0;
-    uint8_t Single_Rotaries_PINA=0;
-    uint8_t Single_Rotaries_PINB=0;
 
     pintype curr_pin_type;
     QString name_template("widget_PB%1");
@@ -525,40 +314,22 @@ void OSHStudio::gatherAllConf()
                 case (AnalogMedSmooth):
                 case (AnalogHighSmooth):        AxisComb1+='A'+QString::number(i);
                                                 NumberAnalogInputs ++; break;
+                case (Analog2Button):           A2Bstore[Analog2Buttons_inputs++].pin_number=pin_number; break;
                 case (Chain_Rotary_PINA):       Chain_PinA++; break;
                 case (Chain_Rotary_PINB):       Chain_PinB++; break;
                 case (Chain_Rotary_Enc_1):      Chain_Rotaries_1++; break;
                 case (Chain_Rotary_Enc_2):      Chain_Rotaries_2++; break;
-                case (Chain_Rotary_Enc_4):      Chain_Rotaries_4++; break;
-                case (Single_Rotary_PINA_1):    single_encoders_store[Single_Rotaries_PINA].pinA=pin_number;
-                                                single_encoders_store[Single_Rotaries_PINA].pinA_type=Single_Rotary_PINA_1;
-                                                Single_Rotaries_PINA++;
-                                                Single_Rotaries_PINA_1++;
+                case (Single_Rotary_PINA_1):    single_encoders_1_store[Single_Rotaries_PINA_1++].pinA=pin_number;
                                                 break;
-                case (Single_Rotary_PINB_1):    Single_Rotaries_PINB_1++;
-                                                single_encoders_store[Single_Rotaries_PINB].pinB=pin_number;
-                                                single_encoders_store[Single_Rotaries_PINB].pinB_type=Single_Rotary_PINA_1;
-                                                Single_Rotaries_PINB++;
+                case (Single_Rotary_PINB_1):    single_encoders_1_store[Single_Rotaries_PINB_1++].pinB=pin_number;
                                                 break;
-                case (Single_Rotary_PINA_2):    Single_Rotaries_PINA_2++;
-                                                single_encoders_store[Single_Rotaries_PINA].pinA=pin_number;
-                                                single_encoders_store[Single_Rotaries_PINA].pinA_type=Single_Rotary_PINA_2;
-                                                Single_Rotaries_PINA++;
+                case (Single_Rotary_PINA_2):    single_encoders_2_store[Single_Rotaries_PINA_2++].pinA=pin_number;
                                                 break;
-                case (Single_Rotary_PINB_2):    Single_Rotaries_PINB_2++;
-                                                single_encoders_store[Single_Rotaries_PINB].pinB=pin_number;
-                                                single_encoders_store[Single_Rotaries_PINB].pinB_type=Single_Rotary_PINA_2;
-                                                Single_Rotaries_PINB++;
+                case (Single_Rotary_PINB_2):    single_encoders_2_store[Single_Rotaries_PINB_2++].pinB=pin_number;
                                                 break;
-                case (Single_Rotary_PINA_4):    Single_Rotaries_PINA_4++;
-                                                single_encoders_store[Single_Rotaries_PINA].pinA=pin_number;
-                                                single_encoders_store[Single_Rotaries_PINA].pinA_type=Single_Rotary_PINA_4;
-                                                Single_Rotaries_PINA++;
+                case (Single_Rotary_PINA_4):    single_encoders_4_store[Single_Rotaries_PINA_4++].pinA=pin_number;
                                                 break;
-                case (Single_Rotary_PINB_4):    Single_Rotaries_PINB_4++;
-                                                single_encoders_store[Single_Rotaries_PINB].pinB=pin_number;
-                                                single_encoders_store[Single_Rotaries_PINB].pinB_type=Single_Rotary_PINA_4;
-                                                Single_Rotaries_PINB++;
+                case (Single_Rotary_PINB_4):    single_encoders_4_store[Single_Rotaries_PINB_4++].pinB=pin_number;
                                                 break;
                 case (Button_ROW):              ButtonsRows++; break;
                 case (Button_COLUMN):           ButtonsColumns++; break;
@@ -568,29 +339,8 @@ void OSHStudio::gatherAllConf()
                 case (RotSwWire):               RotSwitchWires++; break;
                 default:                        break;
                 }
-                pin_number++;
+                config.pin[pin_number++] = curr_pin_type;
         }
-    }
-
-        if (Single_Rotaries_PINA_1>Single_Rotaries_PINB_1) {
-        Total_Single_encoders+=Single_Rotaries_PINA_1 ;
-    }
-        else {
-        Total_Single_encoders+=Single_Rotaries_PINB_1 ;
-    }
-
-    if (Single_Rotaries_PINA_2>Single_Rotaries_PINB_2) {
-        Total_Single_encoders+=Single_Rotaries_PINA_2 ;
-    }
-        else {
-        Total_Single_encoders+=Single_Rotaries_PINB_2 ;
-    }
-
-    if (Single_Rotaries_PINA_4>Single_Rotaries_PINB_4) {
-        Total_Single_encoders+=Single_Rotaries_PINA_4 ;
-    }
-        else {
-        Total_Single_encoders+=Single_Rotaries_PINB_4 ;
     }
 
     ui->comboBox_AxisCombBegin->clear();
@@ -599,226 +349,286 @@ void OSHStudio::gatherAllConf()
     ui->comboBox_AxisCombEnd->addItems(AxisComb1);
     ui->comboBox_AxisCombBegin->setCurrentIndex((ui->comboBox_AxisCombBegin->count())-2);
     ui->comboBox_AxisCombEnd->setCurrentIndex((ui->comboBox_AxisCombEnd->count())-1);
+
+    get_all_A2B_buttons();
+}
+
+void OSHStudio::populateDefA2B(){
+  //  resetAllA2B();
+
+    config.analog_2_button_inputs = Analog2Buttons_inputs;
+    ui->label_ZeroA2B->setVisible(config.analog_2_button_inputs ? false : true);
+
+     for(int i=0; i < Analog2Buttons_inputs; i++){
+         A2Bstore[i].widget_ptr->setVisible(true);
+//         A2Bstore[i].widget_ptr->setPinName(pin_names[A2Bstore[i].pin_number]);
+      }
+     showA2Btab();
+}
+
+void OSHStudio::get_all_SB_buttons(){
+    pov1=0;
+    pov2=0;
+    pov3=0;
+    pov4=0;
+    ui->label_POV1->setVisible(false);
+    ui->label_POV2->setVisible(false);
+    ui->label_POV3->setVisible(false);
+    ui->label_POV4->setVisible(false);
+    ui->label_POV1name->setVisible(false);
+    ui->label_POV2name->setVisible(false);
+    ui->label_POV3name->setVisible(false);
+    ui->label_POV4name->setVisible(false);
+    for(int i=0; i < TotalButtons; i++){
+        SBstore[i].button_type = SBstore[i].SB_wid_prt->get_button_type();
+        if ((SBstore[i].button_type == pov1up_button) ||
+                (SBstore[i].button_type == pov1down_button) ||
+                (SBstore[i].button_type == pov1left_button) ||
+                (SBstore[i].button_type == pov1right_button)) pov1++;
+        if ((SBstore[i].button_type == pov2up_button) ||
+                (SBstore[i].button_type == pov2down_button) ||
+                (SBstore[i].button_type == pov2left_button) ||
+                (SBstore[i].button_type == pov2right_button)) pov2++;
+        if ((SBstore[i].button_type == pov3up_button) ||
+                (SBstore[i].button_type == pov3down_button) ||
+                (SBstore[i].button_type == pov3left_button) ||
+                (SBstore[i].button_type == pov3right_button)) pov3++;
+        if ((SBstore[i].button_type == pov4up_button) ||
+                (SBstore[i].button_type == pov4down_button) ||
+                (SBstore[i].button_type == pov4left_button) ||
+                (SBstore[i].button_type == pov4right_button)) pov4++;
+        if (i<MAX_BUTTONS/2) {
+            config.buttons_types1st[i] = SBstore[i].button_type;
+        } else {
+            config.buttons_types2nd[i-MAX_BUTTONS/2] = SBstore[i].button_type;
+        }
+     }
+    if (pov1) {
+        ui->label_POV1->setVisible(true);
+        ui->label_POV1name->setVisible(true);
+    }
+    if (pov2) {
+        ui->label_POV2->setVisible(true);
+        ui->label_POV2name->setVisible(true);
+    }
+    if (pov3) {
+        ui->label_POV3->setVisible(true);
+        ui->label_POV3name->setVisible(true);
+    }
+    if (pov4) {
+        ui->label_POV4->setVisible(true);
+        ui->label_POV4name->setVisible(true);
+    }
+    drawHelpSB();
+}
+
+void OSHStudio::populateDefSB(){
+    for(int i=0; i < MAX_BUTTONS; i++){
+       // SBstore[i] -> setVisible(true);
+        SBstore[i].SB_wid_prt->setVisible(false);
+     }
+
+    for(int i=0; i < TotalButtons; i++){
+       // SBstore[i] -> setVisible(true);
+        SBstore[i].SB_wid_prt->setVisible(true);
+     }
+    get_all_SB_buttons();
+}
+
+void OSHStudio::showA2Btab(){
+    ui->label_ZeroA2B->setVisible(config.analog_2_button_inputs ? false : true);
+   // QString name_template_A2B("widget_A2B_%1");
+    for(int i=0; i < MAX_A2B_INPUTS; i++){
+        A2Bstore[i].widget_ptr->setVisible(false);
+     }
+
+    for(uint8_t i=0; i<config.analog_2_button_inputs; i++){
+        A2Bstore[i].widget_ptr->setVisible(true);
+        A2Bstore[i].widget_ptr->setPinName(pin_names[A2Bstore[i].pin_number]);
+    }
+}
+
+void OSHStudio::resetAllA2B(){
+    QString name_template_A2B("widget_A2B_%1");
+    for(int i=0; i < MAX_A2B_INPUTS; i++){
+        A2Bstore[i].widget_ptr->setVisible(false);
+        A2Bstore[i].number_buttons=1;
+        A2Bstore[i].widget_ptr->setButtonsCount(1);
+     }
+    for (uint8_t i=0; i<MAX_A2B_INPUTS/2;i++){
+        config.a2b_1st5[i].buttons_number = 1;
+        config.a2b_1st5[i].buttons_intervals[0] = 127;
+        config.a2b_2nd5[i].buttons_number = 1;
+        config.a2b_2nd5[i].buttons_intervals[0] = 127;
+    }
+}
+
+void OSHStudio::populateDefSE(){
+    single_encoders_1 = (Single_Rotaries_PINA_1>Single_Rotaries_PINB_1) ? Single_Rotaries_PINB_1 : Single_Rotaries_PINA_1;
+    single_encoders_2 = (Single_Rotaries_PINA_2>Single_Rotaries_PINB_2) ? Single_Rotaries_PINB_2 : Single_Rotaries_PINA_2;
+    single_encoders_4 = (Single_Rotaries_PINA_4>Single_Rotaries_PINB_4) ? Single_Rotaries_PINB_4 : Single_Rotaries_PINA_4;
+    for (uint8_t i=0; i<single_encoders_1; i++){
+        config.single_encoder_pinA[i] = single_encoders_1_store[i].pinA;
+        config.single_encoder_pinB[i] = single_encoders_1_store[i].pinB;
+    }
+    for (uint8_t i=0; i<single_encoders_2; i++){
+        config.single_encoder_pinA[i+single_encoders_1] = single_encoders_2_store[i].pinA;
+        config.single_encoder_pinB[i+single_encoders_1] = single_encoders_2_store[i].pinB;
+    }
+    for (uint8_t i=0; i<single_encoders_4; i++){
+        config.single_encoder_pinA[i+single_encoders_1+single_encoders_2] = single_encoders_4_store[i].pinA;
+        config.single_encoder_pinB[i+single_encoders_1+single_encoders_2] = single_encoders_4_store[i].pinB;
+    }
+    config.total_single_encoders = single_encoders_1 + single_encoders_2 + single_encoders_4;
     showSingleEncodersTab();
 }
 
 void OSHStudio::showSingleEncodersTab(void) {
-    QString name_template_Pix("label_SE%1");
-    QString name_template_CBBA("comboBox_SEA%1");
-    QString name_template_CBBB("comboBox_SEB%1");
-    QString name_template_Pow("label_SE%1_CPin");
-    PINAlist.clear();
-    PINBlist.clear();
-
-    for(uint8_t i =1; i < 15; i++)
-    {
-        QLabel *SEpic_Label = ui->tabWidget->findChild<QLabel *>(name_template_Pix.arg(i));
-        QLabel *SEpow_Label = ui->tabWidget->findChild<QLabel *>(name_template_Pow.arg(i));
-        QComboBox *SEcbba = ui->tabWidget->findChild<QComboBox *>(name_template_CBBA.arg(i));
-        QComboBox *SEcbbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBB.arg(i));
-        SEpic_Label->setVisible(false);
-        SEpow_Label->setVisible(false);
-        SEcbba->setVisible(false);
-        SEcbbb->setVisible(false);
-        SEcbba->clear();
-        SEcbbb->clear();
-      }
-
-    if (!Total_Single_encoders) {
-        ui->label_ZeroSglEncoders->setVisible(true);
-    }
-        else {
-        ui->label_ZeroSglEncoders->setVisible(false);
-        for (uint8_t k=0; k<Total_Single_encoders; k++){
-          if (single_encoders_store[k].pinA_type!=single_encoders_store[k].pinB_type) {
-            for (uint8_t j=k; j<Total_Single_encoders; j++) {
-              if (single_encoders_store[k].pinA_type==single_encoders_store[j].pinB_type) {
-                uint8_t tmp_pin=single_encoders_store[k].pinB;
-                uint8_t tmp_pintype=single_encoders_store[k].pinB_type;
-                single_encoders_store[k].pinB=single_encoders_store[j].pinB;
-                single_encoders_store[k].pinB_type=single_encoders_store[j].pinB_type;
-                single_encoders_store[j].pinB=tmp_pin;
-                single_encoders_store[j].pinB_type=tmp_pintype;
-                j=Total_Single_encoders;
-                }
-            }
-          }
+    ui->label_ZeroSglEncoders->setVisible(config.total_single_encoders ? false : true);
+    QString name_template_SE("widget_SE%1");
+    for(uint8_t i =0; i < MAX_SINGLE_ENCODERS; i++){
+        oshsingenc *SEwid = ui->tabWidget->findChild<oshsingenc *>(name_template_SE.arg(i+1));
+        SEwid->setVisible(false);
+        SEwid->clearPinsLists();
+     }
+    for(uint8_t i =0; i < config.total_single_encoders; i++){
+        oshsingenc *SEwid = ui->tabWidget->findChild<oshsingenc *>(name_template_SE.arg(i+1));
+        SEwid->setVisible(true);
+        for (uint8_t i=0; i<config.total_single_encoders; i++){
+            SEwid->addPins2Lists(config.single_encoder_pinA[i], config.single_encoder_pinB[i],
+                                 config.pin[config.single_encoder_pinA[i]]);
         }
-        for (uint8_t k=0; k<Total_Single_encoders; k++){
-            QString tmp_str;
-            switch (single_encoders_store[k].pinA_type) {
-                case (Single_Rotary_PINA_1): tmp_str="1/1 step - "; break;
-                case (Single_Rotary_PINA_2): tmp_str="1/2 step - "; break;
-                case (Single_Rotary_PINA_4): tmp_str="1/4 step - "; break;
-                default:                     tmp_str=" ";
-            };
-         PINAlist+=(tmp_str+pin_names[single_encoders_store[k].pinA]);
-         PINBlist+=(tmp_str+pin_names[single_encoders_store[k].pinB]);
-        }
-
-        for(uint8_t i =1; i <= Total_Single_encoders; i++)
-        {
-            QLabel *SEpic_Label = ui->tabWidget->findChild<QLabel *>(name_template_Pix.arg(i));
-            QLabel *SEpow_Label = ui->tabWidget->findChild<QLabel *>(name_template_Pow.arg(i));
-            QComboBox *SEcbba = ui->tabWidget->findChild<QComboBox *>(name_template_CBBA.arg(i));
-            QComboBox *SEcbbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBB.arg(i));
-            SEpic_Label->setVisible(true);
-            SEpow_Label->setVisible(true);
-            SEcbba->setVisible(true);
-            SEcbbb->setVisible(true);
-            SEcbba->blockSignals(true);
-            SEcbbb->blockSignals(true);
-            SEcbba->addItems(PINAlist);
-            SEcbba->setCurrentIndex(i-1);
-            SEcbbb->addItems(PINBlist);
-            SEcbbb->setCurrentIndex(i-1);
-            SEcbba->setStyleSheet("QComboBox { color: black; background-color: light gray; }");
-            SEcbbb->setStyleSheet("QComboBox { color: black; background-color: light gray; }");
-            SEcbba->blockSignals(false);
-            SEcbbb->blockSignals(false);
-          }
-
-    }
+        SEwid->setPinsPair(i);
+     }
 }
 
-void OSHStudio::comboBoxSEManualConfig() {
-    QString name_template_CBBA("comboBox_SEA%1");
-    QString name_template_CBBB("comboBox_SEB%1");
-//    QString debugstr="";
+void OSHStudio::get_all_A2B_buttons(void){
+        A2BButtons = 0;
 
-    for(uint8_t i =1; i <= Total_Single_encoders; i++) {
-        QComboBox *SEcbba = ui->tabWidget->findChild<QComboBox *>(name_template_CBBA.arg(i));
-        QComboBox *SEcbbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBB.arg(i));
-        SEcbba->setStyleSheet("QComboBox { color: black; background-color: light gray; }");
-        SEcbbb->setStyleSheet("QComboBox { color: black; background-color: light gray; }");
-        SEcbba->clearFocus();
-        SEcbbb->clearFocus();
-        QString cbb_value=SEcbba->currentText();
-        QChar se_type=cbb_value.at(2);
-        single_encoders_store[i-1].pinA_type=convertCharToSEType(se_type);
-        QString pin_name=cbb_value.section(' ',3,3);
-        single_encoders_store[i-1].pinA=convertPinnameToIndex(pin_name);
-        cbb_value=SEcbbb->currentText();
-        se_type=cbb_value.at(2);
-        single_encoders_store[i-1].pinB_type=convertCharToSEType(se_type);
-        pin_name=cbb_value.section(' ',3,3);
-        single_encoders_store[i-1].pinB=convertPinnameToIndex(pin_name);
-//        debugstr+= QString::number(single_encoders_store[i-1].pinA_type) + " " +
-//                           QString::number(single_encoders_store[i-1].pinA) + " ; " +
-//                           QString::number(single_encoders_store[i-1].pinB_type) + " " +
-//                           QString::number(single_encoders_store[i-1].pinB) + "\n ";
-    }
-//    ui->label_2->setText(debugstr);
-    drawHelpSE();
-}
-
-void OSHStudio::drawHelpSE() {
-    QString name_template_CBBA("comboBox_SEA%1");
-    QString name_template_CBBB("comboBox_SEB%1");
-    QComboBox *SEcbb;
-
-    for(uint8_t i =1; i < Total_Single_encoders; i++) {
-        if (single_encoders_store[i-1].pinA_type != single_encoders_store[i-1].pinB_type) {
-            SEcbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBA.arg(i));
-            SEcbb->setStyleSheet("QComboBox { color: black; background-color: magenta; }");
-            SEcbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBB.arg(i));
-            SEcbb->setStyleSheet("QComboBox { color: black; background-color: magenta; }");
-            SEcbb->clearFocus();
+    config.analog_2_button_inputs = Analog2Buttons_inputs;
+    for (uint8_t i=0; i<Analog2Buttons_inputs; i++){
+        A2BButtons += A2Bstore[i].widget_ptr->getButtonsCount();
+        if (i<5){
+            config.a2b_1st5[i].buttons_number = A2Bstore[i].widget_ptr->getButtonsCount();
+            A2Bstore[i].widget_ptr->getButtonsIntervals(config.a2b_1st5[i].buttons_intervals);
+        } else {
+            config.a2b_2nd5[i-(MAX_A2B_INPUTS/2)].buttons_number = A2Bstore[i].widget_ptr->getButtonsCount();
+            A2Bstore[i].widget_ptr->getButtonsIntervals(config.a2b_2nd5[i-(MAX_A2B_INPUTS/2)].buttons_intervals);
         }
-        for(uint8_t j =i+1; j <= Total_Single_encoders; j++) {
-            if (single_encoders_store[i-1].pinA == single_encoders_store[j-1].pinA) {
-                SEcbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBA.arg(i));
-                SEcbb->setStyleSheet("QComboBox { color: black; background-color: red; }");
-                SEcbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBA.arg(j));
-                SEcbb->setStyleSheet("QComboBox { color: black; background-color: red; }");
-                SEcbb->clearFocus();
-            }
-            if (single_encoders_store[i-1].pinB == single_encoders_store[j-1].pinB) {
-                SEcbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBB.arg(i));
-                SEcbb->setStyleSheet("QComboBox { color: black; background-color: red; }");
-                SEcbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBB.arg(j));
-                SEcbb->setStyleSheet("QComboBox { color: black; background-color: red; }");
-                SEcbb->clearFocus();
-            }
-        }
+    }
 
-    }
-    //and for the last one
-    if (single_encoders_store[Total_Single_encoders-1].pinA_type != single_encoders_store[Total_Single_encoders-1].pinB_type) {
-        SEcbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBA.arg(Total_Single_encoders));
-        SEcbb->setStyleSheet("QComboBox { color: black; background-color: magenta; }");
-        SEcbb = ui->tabWidget->findChild<QComboBox *>(name_template_CBBB.arg(Total_Single_encoders));
-        SEcbb->setStyleSheet("QComboBox { color: black; background-color: magenta; }");
-        SEcbb->clearFocus();
-    }
+    TotalButtons =  (ButtonsRows * ButtonsColumns) +
+                    (RotSwitchPoles * RotSwitchWires) +
+                    (Single_Rotaries_PINA_1*2 + Single_Rotaries_PINB_2*2 + Single_Rotaries_PINA_4*2) +
+                    Chain_Rotaries_1*2 + Chain_Rotaries_2*2 +
+                    A2BButtons +
+                    Buttons;
+    TotalButtons = (TotalButtons > MAX_BUTTONS) ? MAX_BUTTONS : TotalButtons;
+    populateDefSB();
+    drawHelp();
 }
 
-
-uint8_t OSHStudio::convertCharToSEType (QChar ch) {
-    switch (ch.toLatin1()) {
-        case ('1'):   return (Single_Rotary_PINA_1);
-        case ('2'):   return (Single_Rotary_PINA_2);
-        case ('4'):   return (Single_Rotary_PINA_4);
-        default :     return 0;
-    }
-}
 
 uint8_t OSHStudio::convertPinnameToIndex (QString pname) {
-    for(uint8_t i =0; i < PINS; i++) {
+    for(uint8_t i =0; i < USEDPINS; i++) {
         if (pin_names[i]==pname) return i;
     }
     return 255;
 }
 
-void OSHStudio::drawHelp()
-{
-    QString HelpText;
-
-    gatherAllConf();
-
-    if (NumberAnalogInputs > 0) {
-        HelpText = "<br />" + QString::number(NumberAnalogInputs) + " analog inputs <br />";
-        if (NumberAnalogInputs > 6)
-            HelpText = HelpText + "<font color='red'>Sorry, no more than 6 analog inputs</font><br />";
-    }
-
-    if ((Chain_Rotaries_1 > 0) ||(Chain_Rotaries_2 > 0) || (Chain_Rotaries_4 > 0)) {
-        HelpText = HelpText + "<br />" +
-                QString::number(Chain_Rotaries_1 + Chain_Rotaries_2 + Chain_Rotaries_4) + " chained rotary encoders <br />";
-        if ((Chain_PinA != 1) || (Chain_PinB != 1))
-            HelpText = HelpText + "<font color='red'>You have to properly configure PINA and PINB pins of chained encoders</font><br /><br />";
-    }
-
-    if (Total_Single_encoders > 0) {
-        HelpText = HelpText + "<br />" + QString::number(Total_Single_encoders) + " single rotary encoders <br />";
-        if ((Single_Rotaries_PINA_1 != Single_Rotaries_PINB_1) || (Single_Rotaries_PINA_2 != Single_Rotaries_PINB_2) ||
-                (Single_Rotaries_PINA_4 != Single_Rotaries_PINB_4))
-            HelpText = HelpText + "<font color='red'>You have to properly configure PINA and PINB pins of single encoders</font><br /><br />";
-    }
-
-    if ((ButtonsRows>0) && (ButtonsColumns>0))
-        HelpText = HelpText + "<br />" + QString::number(ButtonsRows * ButtonsColumns) + " buttons in matrix <br />";
-
-    if ((ButtonsRows>0) && (!ButtonsColumns))
-        HelpText = HelpText + "<font color='red'>You have to add at least 1 column to matrix</font><br />";
-
-    if ((!ButtonsRows) && (ButtonsColumns>0))
-        HelpText = HelpText + "<font color='red'>You have to add at least 1 row to matrix</font><br />";
-
-    if (Buttons>0)
-        HelpText = HelpText + "<br />" + QString::number(Buttons) + " single buttons <br />";
-
-
-    if ((RotSwitchWires>0) && (RotSwitchPoles>0))
-        HelpText = HelpText + "<br />" + QString::number(RotSwitchWires*RotSwitchPoles) + " buttons in Rotary Switch Config <br />";
-
-    if ((RotSwitchWires>0) && (RotSwitchPoles<1))
-        HelpText = HelpText + "<font color='red'>You have to add at least 1 Pole to Rotary Switch Config</font><br />";
-
-    if ((RotSwitchWires<1) && (RotSwitchPoles>0))
-        HelpText = HelpText + "<font color='red'>You have to add at least 1 Wire to Rotary Switch Config</font><br />";
-
-
-    ui->labelHelp->setText(HelpText);
+void OSHStudio::pinConfChanged(){
+    gatherPinsConf();
+    populateDefSE();
+    populateDefA2B();
+    populateDefSB();
+    drawHelp();
 }
 
+void OSHStudio::setShapesW(void){
+    ui->label_Prof_CustName_1->setText(QString::fromLatin1((char*)config.profile_names[0],10));
+    ui->label_Prof_CustName_2->setText(QString::fromLatin1((char*)config.profile_names[1],10));
+    ui->label_Prof_CustName_3->setText(QString::fromLatin1((char*)config.profile_names[2],10));
+    ui->label_Prof_CustName_4->setText(QString::fromLatin1((char*)config.profile_names[3],10));
+    ui->label_Prof_CustName_5->setText(QString::fromLatin1((char*)config.profile_names[4],10));
+    ui->label_Prof_CustName_6->setText(QString::fromLatin1((char*)config.profile_names[5],10));
+
+    ui->comboBox_curr_shape_prof->clear();
+    ui->comboBox_curr_shape_prof->addItem(QString::fromLatin1((char*)config.profile_names[0],10));
+    ui->comboBox_curr_shape_prof->addItem(QString::fromLatin1((char*)config.profile_names[1],10));
+    ui->comboBox_curr_shape_prof->addItem(QString::fromLatin1((char*)config.profile_names[2],10));
+    ui->comboBox_curr_shape_prof->addItem(QString::fromLatin1((char*)config.profile_names[3],10));
+    ui->comboBox_curr_shape_prof->addItem(QString::fromLatin1((char*)config.profile_names[4],10));
+    ui->comboBox_curr_shape_prof->addItem(QString::fromLatin1((char*)config.profile_names[5],10));
+
+    QString name_template_SE("comboBox_shape_axis_%1");
+    QString name_template_SW("widget_AS_%1");
+    QComboBox *SHwid = nullptr;
+    oshshapesw *SWwid = nullptr;
+    for(uint8_t i =0; i < MAX_AXES; i++){
+        SHwid = ui->tabWidget->findChild<QComboBox *>(name_template_SE.arg(i+1));
+        SHwid->clear();
+        SHwid->addItem(QString::fromLatin1((char*)config.profile_names[0],10));
+        SHwid->addItem(QString::fromLatin1((char*)config.profile_names[1],10));
+        SHwid->addItem(QString::fromLatin1((char*)config.profile_names[2],10));
+        SHwid->addItem(QString::fromLatin1((char*)config.profile_names[3],10));
+        SHwid->addItem(QString::fromLatin1((char*)config.profile_names[4],10));
+        SHwid->addItem(QString::fromLatin1((char*)config.profile_names[5],10));
+        SWwid = ui->tabWidget->findChild<oshshapesw *>(name_template_SW.arg(i+1));
+        SWwid->setAllPoints(axes_shapes[i]);
+     }
+}
+
+void OSHStudio::profile_name_changed(QString text){
+    if (text.size() > 10) text.truncate(10);
+    ui->comboBox_curr_shape_prof->setEditText(text);
+    ui->comboBox_curr_shape_prof->setItemText(ui->comboBox_curr_shape_prof->currentIndex(), text);
+    ui->comboBox_shape_axis_1->setItemText(ui->comboBox_curr_shape_prof->currentIndex(), text);
+    ui->comboBox_shape_axis_2->setItemText(ui->comboBox_curr_shape_prof->currentIndex(), text);
+    ui->comboBox_shape_axis_3->setItemText(ui->comboBox_curr_shape_prof->currentIndex(), text);
+    ui->comboBox_shape_axis_4->setItemText(ui->comboBox_curr_shape_prof->currentIndex(), text);
+    ui->comboBox_shape_axis_5->setItemText(ui->comboBox_curr_shape_prof->currentIndex(), text);
+    ui->comboBox_shape_axis_6->setItemText(ui->comboBox_curr_shape_prof->currentIndex(), text);
+    switch (ui->comboBox_curr_shape_prof->currentIndex()){
+        case (0): ui->label_Prof_CustName_1->setText(text); break;
+        case (1): ui->label_Prof_CustName_2->setText(text); break;
+        case (2): ui->label_Prof_CustName_3->setText(text); break;
+        case (3): ui->label_Prof_CustName_4->setText(text); break;
+        case (4): ui->label_Prof_CustName_5->setText(text); break;
+        case (5): ui->label_Prof_CustName_6->setText(text); break;
+    }
+}
+
+void OSHStudio::current_profile_changed(int current_profile){
+   // current_shape_profile = current_profile;
+    ui->widget_AS_big->setAllPoints(axes_shapes[current_profile]);
+}
+
+void OSHStudio::update_ro_shapes(void){
+    oshshapesw * wdgt_ptr = nullptr;
+
+    uint8_t profile = ui->comboBox_curr_shape_prof->currentIndex();
+
+    switch (profile){
+    case 0: wdgt_ptr = ui->widget_AS_1; break;
+    case 1: wdgt_ptr = ui->widget_AS_2; break;
+    case 2: wdgt_ptr = ui->widget_AS_3; break;
+    case 3: wdgt_ptr = ui->widget_AS_4; break;
+    case 4: wdgt_ptr = ui->widget_AS_5; break;
+    case 5: wdgt_ptr = ui->widget_AS_6; break;
+    default: return;
+    }
+
+    ui->widget_AS_big->getAllPoints(axes_shapes[profile]);
+    wdgt_ptr->setAllPoints(axes_shapes[profile]);
+}
+
+void OSHStudio::setSensorsValue(uint8_t *buffer){
+    struct sensor_report_ report;
+    memcpy(&(report),buffer,sizeof(struct sensor_report_));
+    ui->widget_axis1->setSensorValue(report.sensor_value[0],report.min_calib[0],report.max_calib[0]);
+    ui->widget_axis2->setSensorValue(report.sensor_value[1],report.min_calib[1],report.max_calib[1]);
+    ui->widget_axis3->setSensorValue(report.sensor_value[2],report.min_calib[2],report.max_calib[2]);
+    ui->widget_axis4->setSensorValue(report.sensor_value[3],report.min_calib[3],report.max_calib[3]);
+    ui->widget_axis5->setSensorValue(report.sensor_value[4],report.min_calib[4],report.max_calib[4]);
+    ui->widget_axis6->setSensorValue(report.sensor_value[5],report.min_calib[5],report.max_calib[5]);
+}

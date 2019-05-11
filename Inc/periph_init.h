@@ -34,42 +34,41 @@
 #include <stm32f1xx.h>
 #include <flash_store.h>
 #include <usbd_def.h>
+#include "../common_types/common_structs.h"
 
-#define USEDPINS 32
-#define AXISES 6
+//#define USEDPINS 32
+//#define AXISES 6
 #define ADC_BUFF_SIZE 12
 #define UNIQUEIDREG 0x1FFFF7E8
+#define MOUSEMIN -10
+#define MOUSEMAX 10
+#define MOUSE_THRESHOLD 1
+#define FIRMAXWINDOWSSIZE 7
 
+#define _GPIOA_BASE  0x40010800
+#define _GPIOB_BASE  0x40010C00
+#define _GPIOC_BASE  0x40011000
+#define CRL_OFFSET  0x00
+#define CRH_OFFSET  0x04
+#define IDR_OFFSET  0x08
+#define BSRR_OFFSET 0x10
+#define GPIOA_CRL  (_GPIOA_BASE+CRL_OFFSET)
+#define GPIOA_CRH  (_GPIOA_BASE+CRH_OFFSET)
+#define GPIOA_BSRR (_GPIOA_BASE+BSRR_OFFSET)
+#define GPIOA_IDR  (_GPIOA_BASE+IDR_OFFSET)
+#define GPIOB_CRL  (_GPIOB_BASE+CRL_OFFSET)
+#define GPIOB_CRH  (_GPIOB_BASE+CRH_OFFSET)
+#define GPIOB_BSRR (_GPIOB_BASE+BSRR_OFFSET)
+#define GPIOB_IDR  (_GPIOB_BASE+IDR_OFFSET)
+#define GPIOC_CRL  (_GPIOC_BASE+CRL_OFFSET)
+#define GPIOC_CRH  (_GPIOC_BASE+CRH_OFFSET)
+#define GPIOC_BSRR (_GPIOC_BASE+BSRR_OFFSET)
+#define GPIOC_IDR  (_GPIOC_BASE+IDR_OFFSET)
 
-typedef enum {
-	Not_Used = 0,
-	AnalogNoSmooth = 1,
-	AnalogLowSmooth = 2,
-	AnalogMedSmooth = 3,
-	AnalogHighSmooth = 4,
-	Analog2Button = 5,
-	Chain_Rotary_PINA = 6,
-	Chain_Rotary_PINB = 7,
-	Chain_Rotary_Enc_1 = 8,
-	Chain_Rotary_Enc_2 = 9,
-	Chain_Rotary_Enc_4 = 10,
-	Single_Rotary_PINA_1 = 11,
-	Single_Rotary_PINB_1 = 12,
-	Single_Rotary_PINA_2 = 13,
-	Single_Rotary_PINB_2 = 14,
-	Single_Rotary_PINA_4 = 15,
-	Single_Rotary_PINB_4 = 16,
-	Button_ROW = 17,
-	Button_COLUMN = 18,
-	Button = 19,
-	Button_GND = 20,
-	RotSwPole = 21,
-	RotSwWire = 22,
-} pintype;
 
 
 struct pin_conf {
-		pintype pin_type;
+//		pintype pin_type;
 		uint32_t * conf_reg_addr;
 		uint32_t * bsrr_reg_addr;
 		uint32_t * idr_reg_addr;
@@ -81,21 +80,21 @@ struct rot_conf {
 		pintype PINB_Type;
 		uint32_t * PINA_IDR;
 		uint32_t * PINB_IDR;
-		uint16_t PINA;
-		uint16_t PINB;
+//		uint16_t PINA;
+//		uint16_t PINB;
 		uint16_t PINAmask;
 		uint16_t PINBmask;
 	};
 
-struct axis_conf {
-	uint8_t calib_min_lowbyte;
-	uint8_t calib_min_hibyte;
-	uint8_t calib_max_lowbyte;
-	uint8_t calib_max_hibyte;
-	uint8_t special;
-	uint32_t calib_min;
-	uint32_t calib_max;
-};
+//struct axis_conf {
+//	uint8_t calib_min_lowbyte;
+//	uint8_t calib_min_hibyte;
+//	uint8_t calib_max_lowbyte;
+//	uint8_t calib_max_hibyte;
+//	uint8_t special;
+//	uint32_t calib_min;
+//	uint32_t calib_max;
+//};
 
 struct rot_switches {
 	uint8_t state;
@@ -112,5 +111,8 @@ void fill_buffer_4_axises(void);
 uint32_t map(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max);
 void custom_usb_config(void);
 uint8_t uint8_to_32(uint8_t value);
+void periph_deinit(void);
+uint16_t getSplinePoint(uint16_t p1, uint16_t p2, uint16_t distance);
+uint16_t fir_smoothing(uint16_t orig_value, uint16_t input, uint8_t window_size);
 
 #endif /* PERIPH_INIT_H_ */

@@ -19,16 +19,38 @@ SOURCES += main.cpp\
     board_types.cpp \
     oshaxiswca.cpp \
     get_put_config.cpp \
-    oshpincombobox.cpp
+    oshpincombobox.cpp \
+    worker.cpp \
+    oshsingenc.cpp \
+    osha2bw.cpp \
+    oshbuttonw.cpp \
+    draw_helps.cpp \
+    oshshapesw.cpp
 
 HEADERS  += oshstudio.h \
     hidapi.h \
     oshaxiswca.h \
-    oshpincombobox.h
+    oshpincombobox.h \
+    hidapi.h \
+    oshaxiswca.h \
+    oshpincombobox.h \
+    oshstudio.h \
+    ../common_types/common_structs.h \
+    worker.h \
+    ../common_types/common_defines.h \
+    oshsingenc.h \
+    osha2bw.h \
+    oshbuttonw.h \
+    oshshapesw.h \
+    ../common_types/common_functions.h
 
 FORMS    += oshstudio.ui \
     oshaxiswca.ui \
-    oshpincombobox.ui
+    oshpincombobox.ui \
+    oshsingenc.ui \
+    osha2bw.ui \
+    oshbuttonw.ui \
+    oshshapesw.ui
 
 RESOURCES += \
     oshstudio.qrc
