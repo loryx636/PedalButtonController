@@ -59,12 +59,12 @@
   */ 
 #define USBD_VID     0x1209
 #define USBD_LANGID_STRING     1033
-#define USBD_MANUFACTURER_STRING     "OpenSimHardware"
+#define USBD_MANUFACTURER_STRING     "LTsimFactory"
 #define USBD_PID_FS     0x3100
 //#define USBD_PRODUCT_STRING_FS     "OSH PB Controller "
 //#define USBD_SERIALNUMBER_STRING_FS     "00000000001A"
-#define USBD_CONFIGURATION_STRING_FS     "OSH PB Controller Config"
-#define USBD_INTERFACE_STRING_FS     "OSH PB Controller Interface"
+#define USBD_CONFIGURATION_STRING_FS     "LTsim-Configurator"
+#define USBD_INTERFACE_STRING_FS     "LTsim-Interface"
 //#define FIRMWARERELEASE 14
 
 //extern uint8_t * USBD_PRODUCT_STRING_FS;
@@ -206,23 +206,19 @@ uint8_t *  USBD_FS_LangIDStrDescriptor( USBD_SpeedTypeDef speed , uint16_t *leng
 uint8_t *  USBD_FS_ProductStrDescriptor( USBD_SpeedTypeDef speed , uint16_t *length)
 {
 	uint8_t USB_Product_String[31] = {
-			79, // O
-			83, // S
-			72, // H
-			32, // Space
-			80, // P
-			66, // B
-			32, // Space
-			67, // C
-			111, // o
-			110, // n
+			76, // L
+			84, // T
+			115, // s
+			105, // i
+			109, // m
+			/*32, // Spazio
+			70, // F
+			97, // a
+			99, // c
 			116, // t
-			114, // r
 			111, // o
-			108, // l
-			108, // l
-			101, // e
 			114, // r
+			121, // y*/
 			0,	// 0
 	};
 	uint8_t i=0;
