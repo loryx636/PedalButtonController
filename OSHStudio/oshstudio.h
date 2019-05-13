@@ -8,6 +8,7 @@
 #include<QTextStream>
 #include "osha2bw.h"
 #include "..\common_types\common_structs.h"
+#include "oshbuttonw.h"
 
 namespace Ui {
 class OSHStudio;
@@ -23,6 +24,11 @@ struct A2B_params {
     osha2bw * widget_ptr;
     uint8_t number_buttons;
     uint8_t pin_number;
+};
+
+struct SB_params {
+    oshbuttonw * SB_wid_prt;
+    button_mode button_type;
 };
 
 struct pin_comp_geometry {
@@ -45,12 +51,13 @@ public:
 
 private:
   Ui::OSHStudio *ui;
-  hid_device *handle_device;
+//  hid_device *handle_device;
   struct total_config_ config;
   struct single_encoders_pins single_encoders_1_store[MAX_SINGLE_ENCODERS];
   struct single_encoders_pins single_encoders_2_store[MAX_SINGLE_ENCODERS];
   struct single_encoders_pins single_encoders_4_store[MAX_SINGLE_ENCODERS];
   struct A2B_params A2Bstore[MAX_A2B_INPUTS];
+  struct SB_params SBstore[MAX_BUTTONS];
   uint8_t single_encoders_1;
   uint8_t single_encoders_2;
   uint8_t single_encoders_4;
@@ -70,36 +77,42 @@ private:
   uint8_t ButtonsRows;
   uint8_t ButtonsColumns;
   uint8_t Buttons;
+  uint8_t A2BButtons = 0;
+  uint16_t TotalButtons;
   uint8_t RotSwitchPoles;
   uint8_t RotSwitchWires;
   uint8_t Analog2Buttons_inputs;
+  uint8_t pov1;
+  uint8_t pov2;
+  uint8_t pov3;
+  uint8_t pov4;
+  uint16_t axes_shapes[MAX_AXES][SHAPEVALUES];
+  bool config_mode;
 
 private slots:
+  void drawHelpSB(void);
+  void setShapesW(void);
+  void get_all_A2B_buttons(void);
+  void get_all_SB_buttons(void);
+  void populateDefSB(void);
   void getConfig_Slot();
   void gatherConfig_Slot();
-  void getACKpacket(uint8_t);
-  void getConfigPacket(uint8_t * buf);
+  void getACKpacket(uint8_t *);
+  void getConfigPacket(uint8_t *);
   void writeConfig_Slot();
   void resetConfig_Slot();
   void setConfig_Slot();
   void restoreConfig_Slot();
+  void resetConfigValues(void);
   void show_USB_ident_uniq(QString ident);
   void show_USB_exch_rate(int interval);
   void showBoardType(int boardtype);
   uint8_t convertPinnameToIndex (QString pname);
   void drawHelpSE();
-  void drawAxis1Value(uint16_t axis_value);
-  void drawAxis2Value(uint16_t axis_value);
-  void drawAxis3Value(uint16_t axis_value);
-  void drawAxis4Value(uint16_t axis_value);
-  void drawAxis5Value(uint16_t axis_value);
-  void drawAxis6Value(uint16_t axis_value);
-  void drawButtons1Value(uint64_t buttons_value);
-  void drawButtons2Value(uint64_t buttons_value);
-  void drawPOVSvalue(uint64_t POVS_value);
+  void profile_name_changed(QString);
+  void getGamepadPacket(uint8_t *);
   void showConnectDeviceInfo();
   void hideConnectDeviceInfo();
-  QString convertIntToString(int i);
   void showPercentAxisComb(int i);
   void showPin1AxisComb(QString pinname);
   void showPin2AxisComb(QString pinname);
@@ -115,10 +128,10 @@ private slots:
   void showA2Btab();
   void resetAllA2B();
   void showSingleEncodersTab(void);
-  void checkBoxPOV1Changed(int state);
-  void checkBoxPOV2Changed(int state);
-  void checkBoxPOV3Changed(int state);
-  void checkBoxPOV4Changed(int state);
+  void current_profile_changed(int current_profile);
+  void update_ro_shapes(void);
+  void setSensorsValue(uint8_t *buffer);
+  void write_config_packet(void);
 };
 
 #endif // OSHSTUDIO_H

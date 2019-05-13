@@ -40,6 +40,10 @@
 //#define AXISES 6
 #define ADC_BUFF_SIZE 12
 #define UNIQUEIDREG 0x1FFFF7E8
+#define MOUSEMIN -10
+#define MOUSEMAX 10
+#define MOUSE_THRESHOLD 1
+#define FIRMAXWINDOWSSIZE 7
 
 #define _GPIOA_BASE  0x40010800
 #define _GPIOB_BASE  0x40010C00
@@ -108,5 +112,7 @@ uint32_t map(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uin
 void custom_usb_config(void);
 uint8_t uint8_to_32(uint8_t value);
 void periph_deinit(void);
+uint16_t getSplinePoint(uint16_t p1, uint16_t p2, uint16_t distance);
+uint16_t fir_smoothing(uint16_t orig_value, uint16_t input, uint8_t window_size);
 
 #endif /* PERIPH_INIT_H_ */
