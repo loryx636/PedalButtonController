@@ -94,7 +94,7 @@ void Worker::processSensorData(void){
                hid_close(handle_read);
                handle_read=nullptr;
             } else {
-                if ((buf[0] == 5) and (buf[1] == 254)) {
+                if ((buf[0] == 5) && (buf[1] == 254)) {
                         emit putSensorPacket(buf);
                         QThread::msleep(30);
                 }

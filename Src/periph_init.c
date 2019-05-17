@@ -52,8 +52,8 @@ const struct pin_conf pins[USEDPINS] = {
 		{(uint32_t *)GPIOB_CRL, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 3},		//B3
 		{(uint32_t *)GPIOB_CRL, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 4}, 		//B4
 		{(uint32_t *)GPIOB_CRL, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 5}, 		//B5
-		{(uint32_t *)GPIOB_CRL, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 6}, 		//B6
-		{(uint32_t *)GPIOB_CRL, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 7}, 		//B7
+		{(uint32_t *)GPIOB_CRL, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 6}, 		//B6 //tenere libero per display
+		{(uint32_t *)GPIOB_CRL, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 7}, 		//B7 //tenere libero per display
 		{(uint32_t *)GPIOB_CRH, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 8}, 		//B8
 		{(uint32_t *)GPIOB_CRH, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 9}, 		//B9
 		{(uint32_t *)GPIOB_CRH, (uint32_t *)GPIOB_BSRR, (uint32_t *)GPIOB_IDR, 10},		//B10
@@ -67,8 +67,223 @@ const struct pin_conf pins[USEDPINS] = {
 		{(uint32_t *)GPIOC_CRH, (uint32_t *)GPIOC_BSRR, (uint32_t *)GPIOC_IDR, 15},		//C15
 };
 
-//default parameters
+
+//configurazione buttonBox gt3 con display
 volatile struct total_config_ config = {
+		    .config_version = FIRMWARERELEASE,
+			.packet_id1 = 4,
+			.packet_id2 = 4,
+			.packet_id3 = 4,
+			.packet_id4 = 4,
+			.packet_id5 = 4,
+			.packet_id6 = 4,
+			.packet_id7 = 4,
+			.packet_id8 = 4,
+			.operation_code1 = 1,
+			.operation_code2 = 2,
+			.operation_code3 = 3,
+			.operation_code4 = 4,
+			.operation_code5 = 4,
+			.operation_code6 = 4,
+			.operation_code7 = 4,
+			.operation_code8 = 4,
+			.rotary_press_time = 100,
+			.rotary_debounce_time = 50,
+			.button_debounce_time = 50,
+			.rotswitch_press_time = 100,
+			.rotswitch_min_time = 0,
+			.analog_2_button_min_time = 0,
+			.analog_2_button_press_time = 100,
+			.usb_exchange_rate = 16,
+			.combined_axis1_mincalib_value = 0,
+			.combined_axis1_maxcalib_value = 4095,
+			.combined_axis2_mincalib_value = 0,
+			.combined_axis2_maxcalib_value = 4095,
+			.combined_axis_percent = 50,
+			.combined_axis_pin1 = 4,
+			.combined_axis_pin2 = 5,
+			.combined_axis_enabled = 0,
+			.total_single_encoders = 0,
+			.combined_axis_cooperate = 1,
+			.combined_axis_separate = 0,
+			.combined_axis_pin1_autocalib = 0,
+			.combined_axis_pin2_autocalib = 0,
+			//.analog_2_button_threshold = 600, //for DimSim
+			.analog_2_button_inputs = 0,
+			.POV_config = 0,
+			.axes[0].axis_min_calib_value = 0x1E, //for DimSim
+			.axes[0].axis_max_calib_value = 0x3A3, //for DimSim
+			.axes[0].axis_profile = 0,
+			.axes[0].axis_autocalibrate = 0,
+			.axes[1].axis_min_calib_value = 0,
+			.axes[1].axis_max_calib_value = 4095,
+			.axes[1].axis_profile = 0,
+			.axes[1].axis_autocalibrate = 0,
+			.axes[2].axis_min_calib_value = 0,
+			.axes[2].axis_max_calib_value = 4095,
+			.axes[2].axis_profile = 0,
+			.axes[2].axis_autocalibrate = 0,
+			.axes[3].axis_min_calib_value = 0,
+			.axes[3].axis_max_calib_value = 4095,
+			.axes[3].axis_profile = 0,
+			.axes[3].axis_autocalibrate = 0,
+			.axes[4].axis_min_calib_value = 0,
+			.axes[4].axis_max_calib_value = 4095,
+			.axes[4].axis_profile = 0,
+			.axes[4].axis_autocalibrate = 0,
+			.axes[5].axis_min_calib_value = 0,
+			.axes[5].axis_max_calib_value = 4095,
+			.axes[5].axis_profile = 0,
+			.axes[5].axis_autocalibrate = 0,
+			.pin[0] = Button_ROW,		//A0
+			.pin[1] = Button_ROW,		//A1
+			.pin[2] = Button_ROW, 		//A2
+			.pin[3] = Button_ROW, 		//A3
+			.pin[4] = Button_ROW, 		//A4
+			.pin[5] = Not_Used, 		//A5	//Not_Used		//AnalogMedSmooth
+			.pin[6] = Not_Used, 		//A6	//Not_Used		//Chain_Rotary_Enc_1
+			.pin[7] = Not_Used, 		//A7	//Not_Used		//Button_COLUMN
+			.pin[8] = Button_COLUMN, 		//A8	//Not_Used		//Chain_Rotary_Enc_1
+			.pin[9] = Button_COLUMN, 	 	//A9	//Not_Used		//Chain_Rotary_Enc_1
+			.pin[10] = Chain_Rotary_Enc_1, 		//A10	//Not_Used		//Chain_Rotary_Enc_1
+			.pin[11] = Not_Used, 		//A11	//Not_Used		//Not_Used
+			.pin[12] = Not_Used, 		//A12	//Not_Used		//Not_Used
+			.pin[13] = Chain_Rotary_Enc_1, 		//A15	//Not_Used		//Chain_Rotary_Enc_1
+			.pin[14] = Chain_Rotary_Enc_1, 		//B0	//Not_Used		//Chain_Rotary_Enc_1
+			.pin[15] = Chain_Rotary_Enc_1, 	 	//B1	//Not_Used		//Chain_Rotary_Enc_1
+			.pin[16] = Chain_Rotary_Enc_1, 		//B3	//Not_Used		//Button_COLUMN
+			.pin[17] = Button,		//B4	//Not_Used		//Button_ROW
+			.pin[18] = Button,		//B5	//Not_Used		//Button_ROW
+			.pin[19] = Not_Used, 		//B6	//Not_Used		//Button_ROW //tenere liberi per display
+			.pin[20] = Not_Used, 	 	//B7	//Not_Used		//Button_ROW //tenere liberi per display
+			.pin[21] = Not_Used, 	 	//B8	//Not_Used		  //usare per cronometro display
+			.pin[22] = Not_Used, 	 	//B9	//Not_Used		  //usare per cronometro display
+			.pin[23] = Not_Used, 		//B10	//Not_Used		//tenere liberi per display
+			.pin[24] = Not_Used, 		//B11	//Not_Used		//tenere liberi per display
+			.pin[25] = Button_COLUMN, 		//B12
+			.pin[26] = Button_COLUMN, 		//B13
+			.pin[27] = Button_COLUMN, 		//B14
+			.pin[28] = Button_COLUMN, 		//B15
+			.pin[29] = Not_Used, 		//C13
+			.pin[30] = Chain_Rotary_PINA, 		//C14
+			.pin[31] = Chain_Rotary_PINB, 		//C15
+			.profile_names[0][0] = 'L',
+			.profile_names[0][1] = 'i',
+			.profile_names[0][2] = 'n',
+			.profile_names[0][3] = 'e',
+			.profile_names[0][4] = 'a',
+			.profile_names[0][5] = 'r',
+			.profile_names[0][6] = 0,
+			.profile_names[1][0] = 'E',
+			.profile_names[1][1] = 'x',
+			.profile_names[1][2] = 'p',
+			.profile_names[1][3] = 'o',
+			.profile_names[1][4] = 'n',
+			.profile_names[1][5] = 'e',
+			.profile_names[1][6] = 'n',
+			.profile_names[1][7] = 't',
+			.profile_names[1][8] = '1',
+			.profile_names[1][9] = 0,
+			.profile_names[2][0] = 'E',
+			.profile_names[2][1] = 'x',
+			.profile_names[2][2] = 'p',
+			.profile_names[2][3] = 'o',
+			.profile_names[2][4] = 'n',
+			.profile_names[2][5] = 'e',
+			.profile_names[2][6] = 'n',
+			.profile_names[2][7] = 't',
+			.profile_names[2][8] = '2',
+			.profile_names[2][9] = 0,
+			.profile_names[3][0] = 'S',
+			.profile_names[3][1] = 'h',
+			.profile_names[3][2] = 'a',
+			.profile_names[3][3] = 'p',
+			.profile_names[3][4] = 'e',
+			.profile_names[3][5] = '1',
+			.profile_names[3][6] = 0,
+			.profile_names[4][0] = 'S',
+			.profile_names[4][1] = 'h',
+			.profile_names[4][2] = 'a',
+			.profile_names[4][3] = 'p',
+			.profile_names[4][4] = 'e',
+			.profile_names[4][5] = '2',
+			.profile_names[4][6] = 0,
+			.profile_names[5][0] = 'I',
+			.profile_names[5][1] = 'n',
+			.profile_names[5][2] = 'v',
+			.profile_names[5][3] = 'e',
+			.profile_names[5][4] = 'r',
+			.profile_names[5][5] = 't',
+			.profile_names[5][6] = 'e',
+			.profile_names[5][7] = 'd',
+			.profile_names[5][8] = 0,
+			.axes_shapes1[0][0] = 0x000,
+			.axes_shapes1[0][1] = 0x1D0,
+			.axes_shapes1[0][2] = 0x3A0,
+			.axes_shapes1[0][3] = 0x550,
+			.axes_shapes1[0][4] = 0x720,
+			.axes_shapes1[0][5] = 0x8C0,
+			.axes_shapes1[0][6] = 0xAA0,
+			.axes_shapes1[0][7] = 0xC40,
+			.axes_shapes1[0][8] = 0xE40,
+			.axes_shapes1[0][9] = 0xFFF, //linear
+			.axes_shapes1[1][0] = 0x000,
+			.axes_shapes1[1][1] = 0x580,
+			.axes_shapes1[1][2] = 0x9C0,
+			.axes_shapes1[1][3] = 0xC40,
+			.axes_shapes1[1][4] = 0xE10,
+			.axes_shapes1[1][5] = 0xF10,
+			.axes_shapes1[1][6] = 0xF80,
+			.axes_shapes1[1][7] = 0xFFF,
+			.axes_shapes1[1][8] = 0xFFF,
+			.axes_shapes1[1][9] = 0xFFF, //exp1
+			.axes_shapes1[2][0] = 0x000,
+			.axes_shapes1[2][1] = 0x000,
+			.axes_shapes1[2][2] = 0x000,
+			.axes_shapes1[2][3] = 0x000,
+			.axes_shapes1[2][4] = 0x060,
+			.axes_shapes1[2][5] = 0x130,
+			.axes_shapes1[2][6] = 0x270,
+			.axes_shapes1[2][7] = 0x440,
+			.axes_shapes1[2][8] = 0x860,
+			.axes_shapes1[2][9] = 0xFFF, //exp2
+			.axes_shapes2[0][0] = 0x000,
+			.axes_shapes2[0][1] = 0x000,
+			.axes_shapes2[0][2] = 0x060,
+			.axes_shapes2[0][3] = 0x1A0,
+			.axes_shapes2[0][4] = 0x4B0,
+			.axes_shapes2[0][5] = 0xB70,
+			.axes_shapes2[0][6] = 0xE40,
+			.axes_shapes2[0][7] = 0xFB0,
+			.axes_shapes2[0][8] = 0xFF0,
+			.axes_shapes2[0][9] = 0xFFF, //shape1
+			.axes_shapes2[1][0] = 0x000,
+			.axes_shapes2[1][1] = 0x440,
+			.axes_shapes2[1][2] = 0x650,
+			.axes_shapes2[1][3] = 0x780,
+			.axes_shapes2[1][4] = 0x7C0,
+			.axes_shapes2[1][5] = 0x7F0,
+			.axes_shapes2[1][6] = 0x860,
+			.axes_shapes2[1][7] = 0x960,
+			.axes_shapes2[1][8] = 0xBD0,
+			.axes_shapes2[1][9] = 0xFFF, //shape2
+			.axes_shapes2[1][0] = 0xFFF,
+			.axes_shapes2[2][1] = 0xE40,
+			.axes_shapes2[2][2] = 0xC40,
+			.axes_shapes2[2][3] = 0xAA0,
+			.axes_shapes2[2][4] = 0x8C0,
+			.axes_shapes2[2][5] = 0x720,
+			.axes_shapes2[2][6] = 0x550,
+			.axes_shapes2[2][7] = 0x3A0,
+			.axes_shapes2[2][8] = 0x1D0,
+			.axes_shapes2[2][9] = 0x000, //inverted
+};
+
+
+
+//default parameters
+/*
+volatile struct total_config_ config ={
 		    .config_version = FIRMWARERELEASE,
 			.packet_id1 = 4,
 			.packet_id2 = 4,
@@ -153,8 +368,8 @@ volatile struct total_config_ config = {
 			.pin[16] = Button_GND, 		//B3	//Not_Used		//Button_COLUMN
 			.pin[17] = Button_GND,		//B4	//Not_Used		//Button_ROW
 			.pin[18] = Button_GND,		//B5	//Not_Used		//Button_ROW
-			.pin[19] = Button_GND, 		//B6	//Not_Used		//Button_ROW
-			.pin[20] = Button_GND, 	 	//B7	//Not_Used		//Button_ROW
+			.pin[19] = Not_Used, 		//B6	//Not_Used		//Button_ROW //tenere liberi per display
+			.pin[20] = Not_Used, 	 	//B7	//Not_Used		//Button_ROW //tenere liberi per display
 			.pin[21] = Button_GND, 	 	//B8	//Not_Used		//Button_ROW
 			.pin[22] = Button_GND, 	 	//B9	//Not_Used		//Button_ROW
 			.pin[23] = Button_GND, 		//B10	//Not_Used		//Chain_Rotary_PINA
@@ -276,7 +491,7 @@ volatile struct total_config_ config = {
 			.axes_shapes2[2][7] = 0x3A0,
 			.axes_shapes2[2][8] = 0x1D0,
 			.axes_shapes2[2][9] = 0x000, //inverted
-};
+};*/
 
 volatile struct mouse_report_ mouse_report = {
 		.packet_id = 6,

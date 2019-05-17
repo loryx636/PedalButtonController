@@ -211,8 +211,15 @@ uint8_t *  USBD_FS_ProductStrDescriptor( USBD_SpeedTypeDef speed , uint16_t *len
 			115, // s
 			105, // i
 			109, // m
-			/*32, // Spazio
-			70, // F
+			32, // Spazio
+			66,//B
+			98,//b
+			111,//o
+			120,//x
+			71,//G
+			84,//T
+			51,//3
+			/*70, // F
 			97, // a
 			99, // c
 			116, // t
