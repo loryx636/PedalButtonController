@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Worker_t {
-    QByteArrayData data[13];
-    char stringdata0[186];
+    QByteArrayData data[11];
+    char stringdata0[152];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -41,16 +41,13 @@ QT_MOC_LITERAL(6, 82, 12), // "putACKpacket"
 QT_MOC_LITERAL(7, 95, 16), // "putGamepadPacket"
 QT_MOC_LITERAL(8, 112, 15), // "putSensorPacket"
 QT_MOC_LITERAL(9, 128, 11), // "putHBPacket"
-QT_MOC_LITERAL(10, 140, 11), // "processData"
-QT_MOC_LITERAL(11, 152, 15), // "processCHIDData"
-QT_MOC_LITERAL(12, 168, 17) // "processSensorData"
+QT_MOC_LITERAL(10, 140, 11) // "processData"
 
     },
     "Worker\0putDisconnectedDeviceInfo\0\0"
     "putConnectedDeviceInfo\0putConfigPacket\0"
     "uint8_t*\0putACKpacket\0putGamepadPacket\0"
-    "putSensorPacket\0putHBPacket\0processData\0"
-    "processCHIDData\0processSensorData"
+    "putSensorPacket\0putHBPacket\0processData"
 };
 #undef QT_MOC_LITERAL
 
@@ -60,7 +57,7 @@ static const uint qt_meta_data_Worker[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -68,18 +65,16 @@ static const uint qt_meta_data_Worker[] = {
        7,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   64,    2, 0x06 /* Public */,
-       3,    0,   65,    2, 0x06 /* Public */,
-       4,    1,   66,    2, 0x06 /* Public */,
-       6,    1,   69,    2, 0x06 /* Public */,
-       7,    1,   72,    2, 0x06 /* Public */,
-       8,    1,   75,    2, 0x06 /* Public */,
-       9,    0,   78,    2, 0x06 /* Public */,
+       1,    0,   54,    2, 0x06 /* Public */,
+       3,    0,   55,    2, 0x06 /* Public */,
+       4,    1,   56,    2, 0x06 /* Public */,
+       6,    1,   59,    2, 0x06 /* Public */,
+       7,    1,   62,    2, 0x06 /* Public */,
+       8,    1,   65,    2, 0x06 /* Public */,
+       9,    0,   68,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      10,    0,   79,    2, 0x0a /* Public */,
-      11,    0,   80,    2, 0x0a /* Public */,
-      12,    0,   81,    2, 0x0a /* Public */,
+      10,    0,   69,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -91,8 +86,6 @@ static const uint qt_meta_data_Worker[] = {
     QMetaType::Void,
 
  // slots: parameters
-    QMetaType::Void,
-    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -112,8 +105,6 @@ void Worker::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 5: _t->putSensorPacket((*reinterpret_cast< uint8_t*(*)>(_a[1]))); break;
         case 6: _t->putHBPacket(); break;
         case 7: _t->processData(); break;
-        case 8: _t->processCHIDData(); break;
-        case 9: _t->processSensorData(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -195,13 +186,13 @@ int Worker::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 8;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 8)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 10;
+        _id -= 8;
     }
     return _id;
 }

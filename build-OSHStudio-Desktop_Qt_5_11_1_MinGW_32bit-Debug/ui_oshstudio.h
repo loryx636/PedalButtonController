@@ -311,6 +311,7 @@ public:
     QLabel *label_Stud_version;
     QLabel *label_58;
     QLabel *label_Firmware_Vers;
+    QPushButton *startLog_Button;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *OSHStudio)
@@ -1435,6 +1436,11 @@ public:
         label_Firmware_Vers = new QLabel(centralWidget);
         label_Firmware_Vers->setObjectName(QStringLiteral("label_Firmware_Vers"));
         label_Firmware_Vers->setGeometry(QRect(980, 20, 31, 21));
+        startLog_Button = new QPushButton(centralWidget);
+        startLog_Button->setObjectName(QStringLiteral("startLog_Button"));
+        startLog_Button->setGeometry(QRect(10, 530, 151, 41));
+        startLog_Button->setFont(font);
+        startLog_Button->setCheckable(true);
         OSHStudio->setCentralWidget(centralWidget);
         statusBar = new QStatusBar(OSHStudio);
         statusBar->setObjectName(QStringLiteral("statusBar"));
@@ -1448,7 +1454,7 @@ public:
 
         retranslateUi(OSHStudio);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(OSHStudio);
@@ -1565,6 +1571,7 @@ public:
         label_Stud_version->setText(QApplication::translate("OSHStudio", "TextLabel", nullptr));
         label_58->setText(QApplication::translate("OSHStudio", "Firmware version:", nullptr));
         label_Firmware_Vers->setText(QString());
+        startLog_Button->setText(QApplication::translate("OSHStudio", "Start Logging to File", nullptr));
     } // retranslateUi
 
 };

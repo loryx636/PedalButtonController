@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_OSHStudio_t {
     QByteArrayData data[56];
-    char stringdata0[804];
+    char stringdata0[811];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -86,7 +86,7 @@ QT_MOC_LITERAL(51, 728, 15), // "current_profile"
 QT_MOC_LITERAL(52, 744, 16), // "update_ro_shapes"
 QT_MOC_LITERAL(53, 761, 15), // "setSensorsValue"
 QT_MOC_LITERAL(54, 777, 6), // "buffer"
-QT_MOC_LITERAL(55, 784, 19) // "write_config_packet"
+QT_MOC_LITERAL(55, 784, 26) // "on_startLog_Button_toggled"
 
     },
     "OSHStudio\0drawHelpSB\0\0setShapesW\0"
@@ -110,7 +110,8 @@ QT_MOC_LITERAL(55, 784, 19) // "write_config_packet"
     "populateDefA2B\0showA2Btab\0resetAllA2B\0"
     "showSingleEncodersTab\0current_profile_changed\0"
     "current_profile\0update_ro_shapes\0"
-    "setSensorsValue\0buffer\0write_config_packet"
+    "setSensorsValue\0buffer\0"
+    "on_startLog_Button_toggled"
 };
 #undef QT_MOC_LITERAL
 
@@ -169,7 +170,7 @@ static const uint qt_meta_data_OSHStudio[] = {
       50,    1,  288,    2, 0x08 /* Private */,
       52,    0,  291,    2, 0x08 /* Private */,
       53,    1,  292,    2, 0x08 /* Private */,
-      55,    0,  295,    2, 0x08 /* Private */,
+      55,    1,  295,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -213,7 +214,7 @@ static const uint qt_meta_data_OSHStudio[] = {
     QMetaType::Void, QMetaType::Int,   51,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 10,   54,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,   37,
 
        0        // eod
 };
@@ -266,7 +267,7 @@ void OSHStudio::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 38: _t->current_profile_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 39: _t->update_ro_shapes(); break;
         case 40: _t->setSensorsValue((*reinterpret_cast< uint8_t*(*)>(_a[1]))); break;
-        case 41: _t->write_config_packet(); break;
+        case 41: _t->on_startLog_Button_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
     }
